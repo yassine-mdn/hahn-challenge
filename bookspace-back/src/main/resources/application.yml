@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: bookspace
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: '2'
+    username: postgres
+    password: postgres
+    url: 'jdbc:postgresql://localhost:5432/bookspace'
+  liquibase:
+    enabled: false
+    change-log: 'classpath:db.changelog/db.changelog-master.yml'
+server:
+  port: '1001'
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+      springframework:
+        web: DEBUG
+        security: DEBUG
+springdoc:
+  api-docs:
+    path: /swagger/v3/api-docs
+  swagger-ui:
+    path: /swagger/swagger-ui.html
+    url: /swagger/v3/api-docs
