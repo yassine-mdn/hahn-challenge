@@ -9,12 +9,12 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface BookMapper {
 
-    BookDTO toDto(Book book);
+    BookDTO toDTO(Book book);
     Book toEntity(BookDTO dto);
 
     List<BookDTO> toDtos(List<Book> books);
 
     @Mapping(target = "id", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateContentFromDto(BookDTO dto, @MappingTarget Book book);
+    void updateBookFromDto(BookDTO dto, @MappingTarget Book book);
 }
