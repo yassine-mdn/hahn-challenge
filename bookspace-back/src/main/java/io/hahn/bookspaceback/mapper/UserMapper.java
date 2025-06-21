@@ -12,6 +12,7 @@ public interface UserMapper {
     UserDTO toDTO(User book);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(source = "createdAt", target = "createdAt")
     User toEntity(UserDTO dto);
 
 
