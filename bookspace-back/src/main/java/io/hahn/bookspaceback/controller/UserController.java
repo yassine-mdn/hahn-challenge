@@ -3,6 +3,7 @@ package io.hahn.bookspaceback.controller;
 import io.hahn.bookspaceback.dto.UserDTO;
 import io.hahn.bookspaceback.service.UserService;
 import io.hahn.bookspaceback.util.PageWrapper;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +16,13 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserDTO> create(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> create(@RequestBody @Valid UserDTO userDTO) {
         UserDTO createdContent = userService.create(userDTO);
         return ResponseEntity.ok(createdContent);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> update(@PathVariable String id, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> update(@PathVariable String id, @Valid @RequestBody UserDTO userDTO) {
         UserDTO updatedContent = userService.update(id, userDTO);
         return ResponseEntity.ok(updatedContent);
     }

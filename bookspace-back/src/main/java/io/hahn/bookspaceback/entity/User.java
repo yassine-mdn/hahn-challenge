@@ -2,7 +2,6 @@ package io.hahn.bookspaceback.entity;
 
 import io.hahn.bookspaceback.entity.enums.Role;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -24,10 +23,9 @@ public class User {
     @Column(length = 15, nullable = false, updatable = false, unique = true)
     private String userName;
 
-    @Email
     private String email;
 
-    @Column(length = 20, nullable = false, updatable = true)
+    @Column(length = 20, nullable = false)
     private String password;
 
     @Enumerated(EnumType.ORDINAL)

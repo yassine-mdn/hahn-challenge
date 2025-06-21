@@ -15,6 +15,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.Validator;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -46,8 +48,13 @@ class UserControllerTest {
     void setUp() {
         objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
+
+        // Get the validator from WebMvcConfigurationSupport
+        Validator validator = new WebMvcConfigurationSupport().mvcValidator();
+
         mockMvc = MockMvcBuilders.standaloneSetup(userController)
                 .setControllerAdvice(new GlobalExceptionHandler())
+                .setValidator(validator)
                 .build();
 
         mockUserDTO = new UserDTO();
@@ -85,6 +92,55 @@ class UserControllerTest {
                         .contentType("application/json")
                         .content(jsonRequest))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void create_ShouldReturnBadRequest_WhenUserNameIsLong() throws Exception {
+        mockUserDTO.setUserName("user name with more than 15 characters");
+        String jsonRequest = objectMapper.writeValueAsString(mockUserDTO);
+
+        mockMvc.perform(post("/api/v1/users")
+                        .contentType("application/json")
+                        .content(jsonRequest))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.userName").value("Username must be between 3 and 15 characters"));
+    }
+
+    @Test
+    void create_ShouldReturnBadRequest_WhenUserNameHasInvalidCharacters() throws Exception {
+        mockUserDTO.setUserName("ya$$ine");
+        String jsonRequest = objectMapper.writeValueAsString(mockUserDTO);
+
+        mockMvc.perform(post("/api/v1/users")
+                        .contentType("application/json")
+                        .content(jsonRequest))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.userName").value("Username must contain only alphanumeric characters and hyphens (-)"));
+    }
+
+    @Test
+    void create_ShouldReturnBadRequest_WhenEmailIsInvalid() throws Exception {
+        mockUserDTO.setEmail("invalid-email");
+        String jsonRequest = objectMapper.writeValueAsString(mockUserDTO);
+
+        mockMvc.perform(post("/api/v1/users")
+                        .contentType("application/json")
+                        .content(jsonRequest))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.email").value("Invalid email format"));
+    }
+
+    @Test
+    void create_ShouldReturnBadRequest_WhenPasswordIsShort() throws Exception {
+        mockUserDTO.setPassword("short");
+        String jsonRequest = objectMapper.writeValueAsString(mockUserDTO);
+
+        mockMvc.perform(post("/api/v1/users")
+                        .contentType("application/json")
+                        .content(jsonRequest))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.password").value("Password must be between 6 and 20 characters"));
     }
 
     @Test
