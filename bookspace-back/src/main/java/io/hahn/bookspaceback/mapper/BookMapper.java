@@ -10,6 +10,8 @@ import java.util.List;
 public interface BookMapper {
 
     BookDTO toDTO(Book book);
+
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "isFeatured", expression = "java(dto.getIsFeatured() != null ? dto.getIsFeatured() : false)")
     Book toEntity(BookDTO dto);
 
