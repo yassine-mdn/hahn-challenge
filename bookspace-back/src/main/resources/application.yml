@@ -13,8 +13,8 @@ spring:
     password: postgres
     url: 'jdbc:postgresql://localhost:5432/bookspace'
   liquibase:
-    enabled: false
-    change-log: 'classpath:db.changelog/db.changelog-master.yml'
+    enabled: true
+    change-log: 'classpath:db/changelog/app-changelog.yml'
 server:
   port: '1001'
 logging:
