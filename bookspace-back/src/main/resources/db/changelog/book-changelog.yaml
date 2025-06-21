@@ -1,0 +1,74 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: yassine
+      preConditions:
+        - onFail: MARK_RAN
+          onError: MARK_RAN
+          not:
+            tableExists:
+              tableName: book
+      changes:
+        - createTable:
+            tableName: book
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: author
+                  type: varchar(255)
+              - column:
+                  name: publisher
+                  type: varchar(255)
+              - column:
+                  name: description
+                  type: varchar(1000)
+              - column:
+                  name: cover_url
+                  type: varchar(255)
+              - column:
+                  name: is_featured
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 2
+      author: yassine
+      preConditions:
+        - onFail: MARK_RAN
+          onError: MARK_RAN
+          not:
+            tableExists:
+              tableName: book_genres
+      changes:
+        - createTable:
+            tableName: book_genres
+            columns:
+              - column:
+                  name: book_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: genres
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: fk_bookgenres_book
+            baseTableName: book_genres
+            baseColumnNames: book_id
+            referencedTableName: book
+            referencedColumnNames: id
+            onDelete: CASCADE
