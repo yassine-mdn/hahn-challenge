@@ -16,5 +16,6 @@ public class BookDTO {
     private List<Genre> genres;
     private String description;
     private String coverUrl;
+    private Boolean isFeatured;
     // add average rating
 }

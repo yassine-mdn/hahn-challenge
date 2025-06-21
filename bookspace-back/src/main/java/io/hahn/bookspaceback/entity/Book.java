@@ -24,4 +24,6 @@ public class Book {
     private List<Genre> genres;
     private String description;
     private String coverUrl;
+    @Column(columnDefinition = "boolean default false")
+    private Boolean isFeatured =  false;
 }

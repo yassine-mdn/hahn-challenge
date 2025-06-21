@@ -66,6 +66,8 @@ public class BookServiceTest {
         assertEquals(bookDTO.getGenres(), result.getGenres());
         assertEquals(bookDTO.getDescription(), result.getDescription());
         assertEquals(bookDTO.getCoverUrl(), result.getCoverUrl());
+        assertNull(bookDTO.getIsFeatured());
+        assertFalse(result.getIsFeatured());
 
     }
 
