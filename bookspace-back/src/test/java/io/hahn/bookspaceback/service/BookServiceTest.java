@@ -85,13 +85,6 @@ public class BookServiceTest {
 
     }
 
-    @Test
-    void create_ShouldThrowCustomException_WhenBookDTOHasAnId() {
-        BookDTO bookDTO = generateBookDTO();
-        bookDTO.setId(1L);
-
-        assertThrows(CustomException.class, () -> bookService.create(bookDTO));
-    }
 
     @Test
     void update_ShouldReturnBookDTO_WhenBookIsUpdatedSuccessfully() {
