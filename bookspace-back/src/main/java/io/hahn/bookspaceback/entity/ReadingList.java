@@ -1,5 +1,6 @@
 package io.hahn.bookspaceback.entity;
 
+import io.hahn.bookspaceback.entity.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -35,6 +36,9 @@ public class ReadingList {
     private LocalDateTime updatedAt;
     private LocalDateTime startedAt;
     private LocalDateTime completedAt;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Min(1)
     @Max(5)
