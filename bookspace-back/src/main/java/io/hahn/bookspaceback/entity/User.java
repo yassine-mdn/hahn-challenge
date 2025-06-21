@@ -1,5 +1,6 @@
 package io.hahn.bookspaceback.entity;
 
+import io.hahn.bookspaceback.entity.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -23,4 +24,7 @@ public class User {
 
     @Column(length = 20, nullable = false, updatable = true)
     private String password;
+
+    @Enumerated(EnumType.ORDINAL)
+    private Role role = Role.USER;
 }
