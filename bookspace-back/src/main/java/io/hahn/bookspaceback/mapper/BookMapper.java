@@ -15,7 +15,6 @@ public interface BookMapper {
     @Mapping(target = "isFeatured", expression = "java(dto.getIsFeatured() != null ? dto.getIsFeatured() : false)")
     Book toEntity(BookDTO dto);
 
-    List<BookDTO> toDtos(List<Book> books);
 
     @Mapping(target = "id", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
