@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 2-1
+      id: 3
       author: yassine
       preConditions:
         - onFail: MARK_RAN
@@ -42,9 +42,16 @@ databaseChangeLog:
                   type: DATETIME
             tableName: users
   - changeSet:
-      id: 2-2
+      id: 4
       author: yassine
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      preConditions:
+        - onFail: MARK_RAN
+          onError: MARK_RAN
+          not:
+              uniqueConstraintExists:
+                  tableName: users
+                  constraintName: uc_users_username
       changes:
         - addUniqueConstraint:
             columnNames: user_name

@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 1-1
+      id: 1
       author: yassine
       preConditions:
         - onFail: MARK_RAN
@@ -43,7 +43,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
   - changeSet:
-      id: 1-2
+      id: 2
       author: yassine
       preConditions:
         - onFail: MARK_RAN
