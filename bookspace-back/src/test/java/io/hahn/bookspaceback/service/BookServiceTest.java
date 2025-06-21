@@ -6,6 +6,7 @@ import io.hahn.bookspaceback.entity.enums.Genre;
 import io.hahn.bookspaceback.exception.CustomException;
 import io.hahn.bookspaceback.mapper.BookMapper;
 import io.hahn.bookspaceback.repository.BookRepository;
+import io.hahn.bookspaceback.util.PageWrapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,7 +140,7 @@ public class BookServiceTest {
         Book book = bookMapper.toEntity(bookDTO);
         book = bookRepository.save(book);
 
-        Page<BookDTO> result = bookService.getAll(0, 10);
+        PageWrapper<BookDTO> result = bookService.getAll(0, 10);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());

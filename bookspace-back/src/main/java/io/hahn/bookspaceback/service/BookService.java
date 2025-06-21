@@ -5,6 +5,7 @@ import io.hahn.bookspaceback.entity.Book;
 import io.hahn.bookspaceback.exception.CustomException;
 import io.hahn.bookspaceback.mapper.BookMapper;
 import io.hahn.bookspaceback.repository.BookRepository;
+import io.hahn.bookspaceback.util.PageWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,7 +21,7 @@ public class BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
 
-    BookDTO create(BookDTO bookDTO) {
+    public BookDTO create(BookDTO bookDTO) {
         try {
             if (bookDTO.getId() != null && bookRepository.existsById(bookDTO.getId())) {
                 log.error("book with id {} already exists", bookDTO.getId());
@@ -76,12 +77,12 @@ public class BookService {
         }
     }
 
-    public Page<BookDTO> getAll(int pageNumber, int pageSize) {
+    public PageWrapper<BookDTO> getAll(int pageNumber, int pageSize) {
         if (pageNumber < 0 || pageSize <= 0) {
             throw new CustomException("Invalid pagination parameters");
         }
         try {
-            return bookRepository.findAll(PageRequest.of(pageNumber, pageSize)).map(bookMapper::toDTO);
+            return new PageWrapper<>(bookRepository.findAll(PageRequest.of(pageNumber, pageSize)).map(bookMapper::toDTO));
         } catch (Exception ex) {
             log.error("Error fetching all books : {}", ex.getMessage());
             throw new CustomException("Failed to fetch all books : " + ex);

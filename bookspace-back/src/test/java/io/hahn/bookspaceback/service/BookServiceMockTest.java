@@ -6,6 +6,7 @@ import io.hahn.bookspaceback.entity.enums.Genre;
 import io.hahn.bookspaceback.exception.CustomException;
 import io.hahn.bookspaceback.mapper.BookMapper;
 import io.hahn.bookspaceback.repository.BookRepository;
+import io.hahn.bookspaceback.util.PageWrapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -174,7 +175,7 @@ class BookServiceMockTest {
         when(bookRepository.findAll(PageRequest.of(0, 10))).thenReturn(new PageImpl<>(List.of(mockBookEntity)));
         when(bookMapper.toDTO(mockBookEntity)).thenReturn(bookDTO);
 
-        Page<BookDTO> results = bookService.getAll(0, 10);
+        PageWrapper<BookDTO> results = bookService.getAll(0, 10);
 
         assertNotNull(results);
         assertEquals(1, results.getContent().size());
@@ -185,7 +186,7 @@ class BookServiceMockTest {
     void getAll_ShouldReturnEmptyPage_WhenNoBooksFound() {
         when(bookRepository.findAll(PageRequest.of(0, 10))).thenReturn(new PageImpl<>(List.of()));
 
-        Page<BookDTO> results = bookService.getAll(0, 10);
+        PageWrapper<BookDTO> results = bookService.getAll(0, 10);
 
         assertNotNull(results);
         assertEquals(0, results.getContent().size());
