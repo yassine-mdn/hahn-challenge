@@ -59,7 +59,7 @@ public class AuthenticationServiceTest {
         testUserDTO = new UserDTO();
         testUserDTO.setUserName("testuser");
         testUserDTO.setEmail("test@example.com");
-        testUserDTO.setPassword(passwordEncoder.encode("password123"));
+        testUserDTO.setPassword("password123");
         testUserDTO.setRole(Role.USER);
         
         // Save the user to the database

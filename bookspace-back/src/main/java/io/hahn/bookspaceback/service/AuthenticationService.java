@@ -2,6 +2,9 @@ package io.hahn.bookspaceback.service;
 
 import io.hahn.bookspaceback.dto.AuthenticationRequestDTO;
 import io.hahn.bookspaceback.dto.AuthenticationResponseDTO;
+import io.hahn.bookspaceback.dto.RegisterDTO;
+import io.hahn.bookspaceback.entity.User;
+import io.hahn.bookspaceback.entity.enums.Role;
 import io.hahn.bookspaceback.exception.CustomException;
 import io.hahn.bookspaceback.repository.UserRepository;
 import io.hahn.bookspaceback.security.JwtService;
@@ -13,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -24,10 +28,11 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
 
     public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO authRequestDTO) {
-        try{
+        try {
             SecurityUser user = userRepository.findByUserNameOrEmail(authRequestDTO.getUsername(), authRequestDTO.getUsername()).map(SecurityUser::new)
                     .orElseThrow(() -> {
                         log.error("User with username {} not found", authRequestDTO.getUsername());
@@ -45,6 +50,43 @@ public class AuthenticationService {
                     .username(user.getUsername())
                     .role(user.getUser().getRole())
                     .accessToken(jwtToken)
+                    .refreshToken(refreshToken)
+                    .build();
+        } catch (CustomException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+            throw new CustomException(ex.getMessage());
+        }
+    }
+
+
+    public AuthenticationResponseDTO register(RegisterDTO registerDTO) {
+        try {
+            if (userRepository.findByUserName(registerDTO.getUserName()).isPresent()) {
+                log.error("Username {} already exists", registerDTO.getUserName());
+                throw new CustomException("Username already exists");
+            }
+            if (userRepository.findByEmail(registerDTO.getEmail()).isPresent()) {
+                log.error("Email {} already exists", registerDTO.getEmail());
+                throw new CustomException("Email already exists");
+            }
+            User user = new User();
+            user.setUserName(registerDTO.getUserName());
+            user.setEmail(registerDTO.getEmail());
+            user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
+            user.setRole(Role.USER);
+
+            User savedUser = userRepository.save(user);
+            SecurityUser securityUser = new SecurityUser(savedUser);
+
+            String token = jwtService.generateToken(securityUser);
+            String refreshToken = jwtService.generateRefreshToken(securityUser);
+
+            return AuthenticationResponseDTO.builder()
+                    .username(savedUser.getUserName())
+                    .role(savedUser.getRole())
+                    .accessToken(token)
                     .refreshToken(refreshToken)
                     .build();
         } catch (CustomException ex) {
