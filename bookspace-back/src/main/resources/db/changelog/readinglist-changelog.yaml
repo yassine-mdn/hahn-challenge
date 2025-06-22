@@ -66,7 +66,7 @@ databaseChangeLog:
           onError: MARK_RAN
           not:
             uniqueConstraintExists:
-              tableName: book
+              tableName: reading_list
               constraintName: FK_READINGLIST_ON_BOOK
       changes:
         - addForeignKeyConstraint:
@@ -85,7 +85,7 @@ databaseChangeLog:
           onError: MARK_RAN
           not:
             uniqueConstraintExists:
-              tableName: users
+              tableName: reading_list
               constraintName: FK_READINGLIST_ON_USER
       changes:
         - addForeignKeyConstraint:
