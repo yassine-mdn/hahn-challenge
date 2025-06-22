@@ -63,7 +63,7 @@ class ReadingListServiceMockTest {
     @BeforeEach
     void setUp() {
         readingListRequestDTO = new ReadingListRequestDTO();
-        readingListRequestDTO.setUserID("Test UUID");
+        readingListRequestDTO.setUserName("Test UUID");
         readingListRequestDTO.setBookID(1L);
         readingListRequestDTO.setStatus(Status.READING);
         readingListRequestDTO.setRating(4);
@@ -105,7 +105,7 @@ class ReadingListServiceMockTest {
 
     @Test
     void create_ShouldReturnReadingListDTO_WhenReadingListIsCreatedSuccessfully() {
-        when(userRepository.findById(readingListRequestDTO.getUserID())).thenReturn(Optional.of(mockUserEntity));
+        when(userRepository.findByUserName(readingListRequestDTO.getUserName())).thenReturn(Optional.of(mockUserEntity));
         when(bookRepository.findById(readingListRequestDTO.getBookID())).thenReturn(Optional.of(mockBookEntity));
         when(readingListRequestMapper.toEntity(readingListRequestDTO)).thenReturn(mockReadingListEntity);
         when(readingListRepository.save(mockReadingListEntity)).thenReturn(mockReadingListEntity);
@@ -123,17 +123,17 @@ class ReadingListServiceMockTest {
 
     @Test
     void create_ShouldThrowCustomException_WhenUserNotFound() {
-        when(userRepository.findById(readingListRequestDTO.getUserID())).thenReturn(Optional.empty());
+        when(userRepository.findByUserName(readingListRequestDTO.getUserName())).thenReturn(Optional.empty());
 
         CustomException exception = assertThrows(CustomException.class, () -> readingListService.create(readingListRequestDTO));
 
-        assertEquals("User with id " + readingListRequestDTO.getUserID() + " not found", exception.getMessage());
+        assertEquals("User with username " + readingListRequestDTO.getUserName() + " not found", exception.getMessage());
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
     }
 
     @Test
     void create_ShouldThrowCustomException_WhenBookNotFound() {
-        when(userRepository.findById(readingListRequestDTO.getUserID())).thenReturn(Optional.of(mockUserEntity));
+        when(userRepository.findByUserName(readingListRequestDTO.getUserName())).thenReturn(Optional.of(mockUserEntity));
         when(bookRepository.findById(readingListRequestDTO.getBookID())).thenReturn(Optional.empty());
 
         CustomException exception = assertThrows(CustomException.class, () -> readingListService.create(readingListRequestDTO));
@@ -144,7 +144,7 @@ class ReadingListServiceMockTest {
 
     @Test
     void create_ShouldThrowCustomException_WhenExceptionOccurs() {
-        when(userRepository.findById(readingListRequestDTO.getUserID())).thenReturn(Optional.of(mockUserEntity));
+        when(userRepository.findByUserName(readingListRequestDTO.getUserName())).thenReturn(Optional.of(mockUserEntity));
         when(bookRepository.findById(readingListRequestDTO.getBookID())).thenReturn(Optional.of(mockBookEntity));
         when(readingListRequestMapper.toEntity(readingListRequestDTO)).thenReturn(mockReadingListEntity);
         when(readingListRepository.save(mockReadingListEntity)).thenThrow(new RuntimeException("Database error"));

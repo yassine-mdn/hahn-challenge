@@ -35,9 +35,9 @@ public class ReadingListService {
 
     public ReadingListDTO create(ReadingListRequestDTO readingListRequestDTO) {
         try {
-            User user = userRepository.findById(readingListRequestDTO.getUserID()).orElseThrow(()-> {
-                log.error("User with id {} not found", readingListRequestDTO.getUserID());
-                return new CustomException("User with id " + readingListRequestDTO.getUserID() + " not found", HttpStatus.NOT_FOUND);
+            User user = userRepository.findByUserName(readingListRequestDTO.getUserName()).orElseThrow(()-> {
+                log.error("User with username {} not found", readingListRequestDTO.getUserName());
+                return new CustomException("User with username " + readingListRequestDTO.getUserName() + " not found", HttpStatus.NOT_FOUND);
             });
             Book book = bookRepository.findById(readingListRequestDTO.getBookID()).orElseThrow(()-> {
                 log.error("Book with id {} not found", readingListRequestDTO.getBookID());

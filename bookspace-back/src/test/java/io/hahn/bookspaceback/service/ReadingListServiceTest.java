@@ -75,7 +75,7 @@ public class ReadingListServiceTest {
 
     private ReadingListRequestDTO generateReadingListRequestDTO() {
         ReadingListRequestDTO dto = new ReadingListRequestDTO();
-        dto.setUserID(testUser.getId());
+        dto.setUserName(testUser.getUserName());
         dto.setBookID(testBook.getId());
         dto.setStatus(Status.READING);
         dto.setRating(4);
@@ -100,12 +100,12 @@ public class ReadingListServiceTest {
     @Test
     void create_ShouldThrowCustomException_WhenUserNotFound() {
         ReadingListRequestDTO requestDTO = generateReadingListRequestDTO();
-        requestDTO.setUserID("non-existent-id");
+        requestDTO.setUserName("non-existent-id");
 
         CustomException exception = assertThrows(CustomException.class, () -> readingListService.create(requestDTO));
 
-        assertTrue(exception.getMessage().contains("User with id"));
-        assertTrue(exception.getMessage().contains("not found"));
+        assertTrue(exception.getMessage().contains("User with username " + requestDTO.getUserName() + " not found"));
+
     }
 
     @Test
@@ -178,15 +178,14 @@ public class ReadingListServiceTest {
         ReadingListRequestDTO requestDTO = generateReadingListRequestDTO();
         readingListService.create(requestDTO);
 
-        // Create a second book and reading list
         Book secondBook = new Book();
         secondBook.setTitle("Second Book");
         secondBook.setAuthor("Second Author");
-        secondBook.setCoverUrl("http://example.com/cover2.jpg");
+        secondBook.setCoverUrl("Second Url");
         secondBook = bookRepository.save(secondBook);
 
         ReadingListRequestDTO secondRequestDTO = new ReadingListRequestDTO();
-        secondRequestDTO.setUserID(testUser.getId());
+        secondRequestDTO.setUserName(testUser.getUserName());
         secondRequestDTO.setBookID(secondBook.getId());
         secondRequestDTO.setStatus(Status.PLAN_TO_READ);
         secondRequestDTO.setRating(null);

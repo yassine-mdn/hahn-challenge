@@ -13,7 +13,7 @@ public class ReadingListRequestDTO {
 
     // userId would be inferred from the logged-in user in the controller layer
     @JsonIgnore
-    private String userID;
+    private String userName;
     @NotNull
     @NotEmpty
     private Long bookID;
