@@ -234,19 +234,19 @@ class UserServiceMockTest {
 
     @Test
     void delete_ShouldDeleteUser_WhenUserExists() {
-        doNothing().when(userRepository).deleteById(userDTO.getId());
+        doNothing().when(userRepository).deleteByUserName(userDTO.getUserName());
 
-        userService.delete(userDTO.getId());
+        userService.delete(userDTO.getUserName());
 
-        verify(userRepository, times(1)).deleteById(userDTO.getId());
+        verify(userRepository, times(1)).deleteByUserName(userDTO.getUserName());
     }
 
     @Test
     void delete_ShouldThrowCustomException_WhenExceptionOccurs() {
-        doThrow(new RuntimeException("Database error")).when(userRepository).deleteById(userDTO.getId());
+        doThrow(new RuntimeException("Database error")).when(userRepository).deleteByUserName(userDTO.getUserName());
 
-        CustomException exception = assertThrows(CustomException.class, () -> userService.delete(userDTO.getId()));
+        CustomException exception = assertThrows(CustomException.class, () -> userService.delete(userDTO.getUserName()));
 
-        assertEquals("Failed to delete user with id " + userDTO.getId() + " : java.lang.RuntimeException: Database error", exception.getMessage());
+        assertEquals("Failed to delete user with username " + userDTO.getUserName() + " : java.lang.RuntimeException: Database error", exception.getMessage());
     }
 }

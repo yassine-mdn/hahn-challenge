@@ -173,10 +173,10 @@ public class UserServiceTest {
         UserDTO userDTO = generateUserDTO();
         UserDTO savedUser = userService.create(userDTO);
 
-        userService.delete(savedUser.getId());
+        userService.delete(savedUser.getUserName());
 
         CustomException exception = assertThrows(CustomException.class, 
-            () -> userService.getById(savedUser.getId()));
+            () -> userService.getByUsername(savedUser.getUserName()));
         
         assertTrue(exception.getMessage().contains("not found"));
     }
