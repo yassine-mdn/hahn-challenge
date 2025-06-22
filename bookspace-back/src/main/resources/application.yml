@@ -15,8 +15,10 @@ spring:
   liquibase:
     enabled: true
     change-log: 'classpath:db/changelog/app-changelog.yml'
+
 server:
   port: '1001'
+
 logging:
   level:
     org:
@@ -29,6 +31,15 @@ logging:
       springframework:
         web: DEBUG
         security: DEBUG
+
+application:
+  security:
+    jwt:
+      secret-key: 556A586E3272357538782F413F4428472B4B6250655368566B59703373367639 #This should never be public
+      expiration: 86400000
+      refresh-token:
+        expiration: 2592000000
+
 springdoc:
   api-docs:
     path: /swagger/v3/api-docs

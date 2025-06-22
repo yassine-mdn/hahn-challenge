@@ -1,7 +1,6 @@
 package io.hahn.bookspaceback.service;
 
 import io.hahn.bookspaceback.dto.UserDTO;
-import io.hahn.bookspaceback.entity.User;
 import io.hahn.bookspaceback.entity.enums.Role;
 import io.hahn.bookspaceback.exception.CustomException;
 import io.hahn.bookspaceback.mapper.UserMapper;
@@ -13,9 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,10 +30,13 @@ public class UserServiceTest {
 
     private UserService userService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @BeforeEach
     void setUp() {
         userRepository.deleteAll();
-        userService = new UserService(userRepository, userMapper);
+        userService = new UserService(userRepository, userMapper, passwordEncoder);
     }
 
     private UserDTO generateUserDTO() {
@@ -57,7 +58,6 @@ public class UserServiceTest {
         assertNotNull(result.getId());
         assertEquals(userDTO.getUserName(), result.getUserName());
         assertEquals(userDTO.getEmail(), result.getEmail());
-        assertEquals(userDTO.getPassword(), result.getPassword());
         assertEquals(userDTO.getRole(), result.getRole());
     }
 
@@ -173,10 +173,10 @@ public class UserServiceTest {
         UserDTO userDTO = generateUserDTO();
         UserDTO savedUser = userService.create(userDTO);
 
-        userService.delete(savedUser.getId());
+        userService.delete(savedUser.getUserName());
 
         CustomException exception = assertThrows(CustomException.class, 
-            () -> userService.getById(savedUser.getId()));
+            () -> userService.getByUsername(savedUser.getUserName()));
         
         assertTrue(exception.getMessage().contains("not found"));
     }

@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
@@ -32,6 +33,9 @@ class UserServiceMockTest {
 
     @Mock
     private UserMapper userMapper;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private UserService userService;
@@ -65,6 +69,7 @@ class UserServiceMockTest {
         when(userRepository.save(any(User.class))).thenReturn(mockUserEntity);
         when(userMapper.toDTO(mockUserEntity)).thenReturn(userDTO);
         when(userMapper.toEntity(userDTO)).thenReturn(mockUserEntity);
+        when(passwordEncoder.encode(userDTO.getPassword())).thenReturn(userDTO.getPassword());
 
         UserDTO result = userService.create(userDTO);
 
@@ -229,19 +234,19 @@ class UserServiceMockTest {
 
     @Test
     void delete_ShouldDeleteUser_WhenUserExists() {
-        doNothing().when(userRepository).deleteById(userDTO.getId());
+        doNothing().when(userRepository).deleteByUserName(userDTO.getUserName());
 
-        userService.delete(userDTO.getId());
+        userService.delete(userDTO.getUserName());
 
-        verify(userRepository, times(1)).deleteById(userDTO.getId());
+        verify(userRepository, times(1)).deleteByUserName(userDTO.getUserName());
     }
 
     @Test
     void delete_ShouldThrowCustomException_WhenExceptionOccurs() {
-        doThrow(new RuntimeException("Database error")).when(userRepository).deleteById(userDTO.getId());
+        doThrow(new RuntimeException("Database error")).when(userRepository).deleteByUserName(userDTO.getUserName());
 
-        CustomException exception = assertThrows(CustomException.class, () -> userService.delete(userDTO.getId()));
+        CustomException exception = assertThrows(CustomException.class, () -> userService.delete(userDTO.getUserName()));
 
-        assertEquals("Failed to delete user with id " + userDTO.getId() + " : java.lang.RuntimeException: Database error", exception.getMessage());
+        assertEquals("Failed to delete user with username " + userDTO.getUserName() + " : java.lang.RuntimeException: Database error", exception.getMessage());
     }
 }

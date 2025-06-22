@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -19,6 +20,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public UserDTO create(UserDTO userDTO) {
         try {
@@ -32,6 +34,7 @@ public class UserService {
             }
 
             User saved = userMapper.toEntity(userDTO);
+            saved.setPassword(passwordEncoder.encode(userDTO.getPassword()));
             saved = userRepository.save(saved);
             return userMapper.toDTO(saved);
         } catch (CustomException ex) {
@@ -79,6 +82,22 @@ public class UserService {
             throw new CustomException("Failed to fetch user with id " + id + " : " + ex);
         }
     }
+    
+    public UserDTO getByUsername(String username) {
+        try {
+            return userRepository.findByUserName(username)
+                    .map(userMapper::toDTO)
+                    .orElseThrow(() -> {
+                        log.error("User with username {} not found", username);
+                        return new CustomException("User with username " + username + " not found", HttpStatus.NOT_FOUND);
+                    });
+        } catch (CustomException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            log.error("Error fetching user with username {}: {}", username, ex.getMessage(), ex);
+            throw new CustomException("Failed to fetch user with username " + username + " : " + ex);
+        }
+    }
 
     public PageWrapper<UserDTO> getAll(int pageNumber, int pageSize) {
         if (pageNumber < 0 || pageSize <= 0) {
@@ -92,12 +111,12 @@ public class UserService {
         }
     }
 
-    public void delete(String id) {
+    public void delete(String username) {
         try {
-            userRepository.deleteById(id);
+            userRepository.deleteByUserName(username);
         } catch (Exception ex) {
-            log.error("Error deleting user with id {} : {}", id, ex.getMessage());
-            throw new CustomException("Failed to delete user with id " + id + " : " + ex);
+            log.error("Error deleting user with username {} : {}", username, ex.getMessage());
+            throw new CustomException("Failed to delete user with username " + username + " : " + ex);
         }
     }
 }

@@ -42,6 +42,7 @@ public class ReadingListService {
                 log.error("Book with id {} not found", readingListRequestDTO.getBookID());
                 return new CustomException("Book with id " + readingListRequestDTO.getBookID() + " not found", HttpStatus.NOT_FOUND);
             });
+            //TODO : check if user already has book in list
 
             ReadingList saved = readingListRequestMapper.toEntity(readingListRequestDTO);
             saved.setBook(book);
