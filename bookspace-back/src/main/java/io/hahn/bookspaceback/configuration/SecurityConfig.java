@@ -1,5 +1,6 @@
-package io.hahn.bookspaceback.security;
+package io.hahn.bookspaceback.configuration;
 
+import io.hahn.bookspaceback.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +29,8 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
 
     private final String[] publicEndpoints = {
-
+            "/api/v1/books/**",
+            "/api/v1/users/**",
     };
 
     @Bean
@@ -37,8 +39,8 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers(HttpMethod.POST,publicEndpoints).permitAll()
-                        .requestMatchers("/api/v1/auth/**","/swagger-ui/**","/v3/api-docs/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, publicEndpoints).permitAll()
+                        .requestMatchers("/api/v1/auth/**", "/swagger-ui/**", "swagger/v3/api-docs/**", "/swagger/swagger-ui/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())

@@ -1,7 +1,6 @@
 package io.hahn.bookspaceback.service;
 
 import io.hahn.bookspaceback.dto.UserDTO;
-import io.hahn.bookspaceback.entity.User;
 import io.hahn.bookspaceback.entity.enums.Role;
 import io.hahn.bookspaceback.exception.CustomException;
 import io.hahn.bookspaceback.mapper.UserMapper;
@@ -15,8 +14,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
