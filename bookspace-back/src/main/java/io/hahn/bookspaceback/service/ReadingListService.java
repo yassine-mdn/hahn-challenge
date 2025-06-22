@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 @RequiredArgsConstructor
 public class ReadingListService {
-    
+
     private final ReadingListRepository readingListRepository;
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
@@ -32,14 +32,13 @@ public class ReadingListService {
     private final ReadingListRequestMapper readingListRequestMapper;
 
 
-
     public ReadingListDTO create(ReadingListRequestDTO readingListRequestDTO) {
         try {
-            User user = userRepository.findByUserName(readingListRequestDTO.getUserName()).orElseThrow(()-> {
+            User user = userRepository.findByUserName(readingListRequestDTO.getUserName()).orElseThrow(() -> {
                 log.error("User with username {} not found", readingListRequestDTO.getUserName());
                 return new CustomException("User with username " + readingListRequestDTO.getUserName() + " not found", HttpStatus.NOT_FOUND);
             });
-            Book book = bookRepository.findById(readingListRequestDTO.getBookID()).orElseThrow(()-> {
+            Book book = bookRepository.findById(readingListRequestDTO.getBookID()).orElseThrow(() -> {
                 log.error("Book with id {} not found", readingListRequestDTO.getBookID());
                 return new CustomException("Book with id " + readingListRequestDTO.getBookID() + " not found", HttpStatus.NOT_FOUND);
             });
@@ -103,6 +102,18 @@ public class ReadingListService {
             return new PageWrapper<>(readingListRepository.findAll(PageRequest.of(pageNumber, pageSize)).map(readingListMapper::toDTO));
         } catch (Exception ex) {
             log.error("Error fetching all readingLists : {}", ex.getMessage());
+            throw new CustomException("Failed to fetch all readingLists : " + ex);
+        }
+    }
+
+    public PageWrapper<ReadingListDTO> getAllByUser(String username, int pageNumber, int pageSize) {
+        if (pageNumber < 0 || pageSize <= 0) {
+            throw new CustomException("Invalid pagination parameters");
+        }
+        try {
+            return new PageWrapper<>(readingListRepository.findAllByUser_UserName(username, PageRequest.of(pageNumber, pageSize)).map(readingListMapper::toDTO));
+        } catch (Exception ex) {
+            log.error("Error fetching all readingLists for user {} : {}", username, ex.getMessage());
             throw new CustomException("Failed to fetch all readingLists : " + ex);
         }
     }

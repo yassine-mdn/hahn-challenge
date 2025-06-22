@@ -199,6 +199,31 @@ public class ReadingListServiceTest {
     }
 
     @Test
+    void getAllByUsername_ShouldReturnPageOfReadingListDTO_WhenReadingListsExist() {
+        ReadingListRequestDTO requestDTO = generateReadingListRequestDTO();
+        readingListService.create(requestDTO);
+
+        Book secondBook = new Book();
+        secondBook.setTitle("Second Book");
+        secondBook.setAuthor("Second Author");
+        secondBook.setCoverUrl("Second Url");
+        secondBook = bookRepository.save(secondBook);
+
+        ReadingListRequestDTO secondRequestDTO = new ReadingListRequestDTO();
+        secondRequestDTO.setUserName(testUser.getUserName());
+        secondRequestDTO.setBookID(secondBook.getId());
+        secondRequestDTO.setStatus(Status.PLAN_TO_READ);
+        secondRequestDTO.setRating(null);
+        readingListService.create(secondRequestDTO);
+
+        PageWrapper<ReadingListDTO> result = readingListService.getAllByUser(testUser.getUserName(), 0, 10);
+
+        assertNotNull(result);
+        assertEquals(2, result.getTotalElements());
+        assertEquals(2, result.getContent().size());
+    }
+
+    @Test
     void getAll_ShouldThrowCustomException_WhenInvalidPaginationParameters() {
         CustomException exception = assertThrows(CustomException.class, 
             () -> readingListService.getAll(-1, 10));

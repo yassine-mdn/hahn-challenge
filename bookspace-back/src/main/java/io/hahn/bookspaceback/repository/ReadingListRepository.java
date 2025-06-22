@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReadingListRepository extends JpaRepository<ReadingList, Long> {
 
-    Page<ReadingList> findAllByUser_Id(String userId, Pageable pageable);
+    Page<ReadingList> findAllByUser_UserName(String username, Pageable pageable);
 
 }
