@@ -42,6 +42,12 @@ public class ReadingListController {
         return ResponseEntity.ok(content);
     }
 
+    @GetMapping("/book/{id}")
+    public ResponseEntity<ReadingListDTO> getByBookId(@PathVariable(name = "username") String username, @PathVariable(name = "id") Long bookId) {
+        ReadingListDTO content = readingListService.getByBookIdAndUserUsername(bookId, username);
+        return ResponseEntity.ok(content);
+    }
+
     @GetMapping
     public ResponseEntity<PageWrapper<ReadingListDTO>> getAll(
             @RequestParam(name = "page", required = false, defaultValue = "0") Integer pageNumber,

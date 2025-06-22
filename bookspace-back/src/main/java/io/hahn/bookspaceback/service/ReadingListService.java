@@ -49,7 +49,7 @@ public class ReadingListService {
             });
             if (readingListRepository.existsByBook_IdAndUser_Id(readingListRequestDTO.getBookID(), readingListRequestDTO.getUserName())) {
                 log.error("Book with id {} already in {} ReadingList", readingListRequestDTO.getBookID(), readingListRequestDTO.getUserName());
-                throw new CustomException("Book with id "+ readingListRequestDTO.getBookID() + "is already part of "+readingListRequestDTO.getUserName()+" reading list");
+                throw new CustomException("Book with id " + readingListRequestDTO.getBookID() + "is already part of " + readingListRequestDTO.getUserName() + " reading list");
             }
             ReadingList saved = readingListRequestMapper.toEntity(readingListRequestDTO);
             applyStatusTimestamps(saved, readingListRequestDTO.getStatus());
@@ -101,6 +101,22 @@ public class ReadingListService {
         } catch (Exception ex) {
             log.error("Error fetching readingList with id {}: {}", id, ex.getMessage(), ex);
             throw new CustomException("Failed to fetch readingList with id " + id + " : " + ex);
+        }
+    }
+
+    public ReadingListDTO getByBookIdAndUserUsername(Long bookId, String username) {
+        try {
+            return readingListRepository.findByBook_IdAndUser_UserName(bookId, username)
+                    .map(readingListMapper::toDTO)
+                    .orElseThrow(() -> {
+                        log.error("ReadingList with associated book id {} and username {} not found", bookId, username);
+                        return new CustomException("ReadingList with associated book id " + bookId + " and username " + username + " not found", HttpStatus.NOT_FOUND);
+                    });
+        } catch (CustomException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            log.error("Error fetching readingList for bookId {} and username {}: {}", bookId, username, ex.getMessage(), ex);
+            throw new CustomException("Failed to fetch readingList for bookId " + bookId + " and username " + username + " : " + ex);
         }
     }
 
