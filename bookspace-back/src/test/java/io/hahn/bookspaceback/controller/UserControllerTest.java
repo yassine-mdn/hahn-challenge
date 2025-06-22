@@ -96,7 +96,7 @@ class UserControllerTest {
 
     @Test
     void create_ShouldReturnBadRequest_WhenUserNameIsLong() throws Exception {
-        mockUserDTO.setUserName("user name with more than 15 characters");
+        mockUserDTO.setUserName("user-name-with-more-than-15-characters");
         String jsonRequest = objectMapper.writeValueAsString(mockUserDTO);
 
         mockMvc.perform(post("/api/v1/users")
