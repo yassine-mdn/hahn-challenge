@@ -15,7 +15,6 @@ public class ReadingListRequestDTO {
     @JsonIgnore
     private String userName;
     @NotNull
-    @NotEmpty
     private Long bookID;
     private Status status;
 
