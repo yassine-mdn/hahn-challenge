@@ -5,6 +5,7 @@ databaseChangeLog:
       file: db/changelog/user-changelog.yaml
   - include:
       file: db/changelog/readinglist-changelog.yaml
-
+  - include:
+      file: db/changelog/update-user-changelog.yaml
 
 

@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: update-password-length
+      author: yassine
+      changes:
+        - modifyDataType:
+            columnName: password
+            newDataType: varchar(72)
+            tableName: users
