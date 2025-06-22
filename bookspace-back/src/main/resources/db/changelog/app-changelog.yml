@@ -3,6 +3,8 @@ databaseChangeLog:
       file: db/changelog/book-changelog.yaml
   - include:
       file: db/changelog/user-changelog.yaml
+  - include:
+      file: db/changelog/readinglist-changelog.yaml
 
 
 
