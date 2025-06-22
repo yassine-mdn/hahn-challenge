@@ -1,0 +1,98 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1750590274025-1
+      author: yassine
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 50
+            sequenceName: reading_list_seq
+            startValue: 1
+  - changeSet:
+      id: 1750590274025-2
+      author: yassine
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      preConditions:
+        - onFail: MARK_RAN
+          onError: MARK_RAN
+          not:
+            tableExists:
+              tableName: reading_list
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_readinglist
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: user_id
+                  type: VARCHAR(36)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: book_id
+                  type: BIGINT
+              - column:
+                  name: added_at
+                  type: DATETIME
+              - column:
+                  name: updated_at
+                  type: DATETIME
+              - column:
+                  name: started_at
+                  type: DATETIME
+              - column:
+                  name: completed_at
+                  type: DATETIME
+              - column:
+                  name: status
+                  type: VARCHAR(255)
+              - column:
+                  name: rating
+                  type: INT
+            tableName: reading_list
+  - changeSet:
+      id: 1750590274025-3
+      author: yassine
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      preConditions:
+        - onFail: MARK_RAN
+          onError: MARK_RAN
+          not:
+            uniqueConstraintExists:
+              tableName: book
+              constraintName: FK_READINGLIST_ON_BOOK
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: book_id
+            baseTableName: reading_list
+            constraintName: FK_READINGLIST_ON_BOOK
+            onDelete: CASCADE
+            referencedColumnNames: id
+            referencedTableName: book
+  - changeSet:
+      id: 1750590274025-4
+      author: yassine
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      preConditions:
+        - onFail: MARK_RAN
+          onError: MARK_RAN
+          not:
+            uniqueConstraintExists:
+              tableName: users
+              constraintName: FK_READINGLIST_ON_USER
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: reading_list
+            constraintName: FK_READINGLIST_ON_USER
+            onDelete: CASCADE
+            referencedColumnNames: id
+            referencedTableName: users
+
