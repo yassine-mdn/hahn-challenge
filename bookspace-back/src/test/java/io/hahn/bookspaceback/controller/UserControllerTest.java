@@ -78,7 +78,6 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.id").value("test-uuid"))
                 .andExpect(jsonPath("$.userName").value("testuser"))
                 .andExpect(jsonPath("$.email").value("test@example.com"))
-                .andExpect(jsonPath("$.password").value("password123"))
                 .andExpect(jsonPath("$.role").value("USER"));
     }
 
@@ -133,12 +132,18 @@ class UserControllerTest {
 
     @Test
     void create_ShouldReturnBadRequest_WhenPasswordIsShort() throws Exception {
-        mockUserDTO.setPassword("short");
-        String jsonRequest = objectMapper.writeValueAsString(mockUserDTO);
+        String jsonRequest = """
+        {
+            "userName": "testuser",
+            "email": "test@example.com",
+            "password": "short"
+        }
+        """;
 
         mockMvc.perform(post("/api/v1/users")
                         .contentType("application/json")
                         .content(jsonRequest))
+                .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.password").value("Password must be between 6 and 20 characters"));
     }
@@ -167,7 +172,6 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.id").value("test-uuid"))
                 .andExpect(jsonPath("$.userName").value("testuser"))
                 .andExpect(jsonPath("$.email").value("test@example.com"))
-                .andExpect(jsonPath("$.password").value("password123"))
                 .andExpect(jsonPath("$.role").value("USER"));
     }
 
@@ -206,7 +210,6 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.id").value("test-uuid"))
                 .andExpect(jsonPath("$.userName").value("testuser"))
                 .andExpect(jsonPath("$.email").value("test@example.com"))
-                .andExpect(jsonPath("$.password").value("password123"))
                 .andExpect(jsonPath("$.role").value("USER"));
     }
 
@@ -232,7 +235,6 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.content[0].id").value("test-uuid"))
                 .andExpect(jsonPath("$.content[0].userName").value("testuser"))
                 .andExpect(jsonPath("$.content[0].email").value("test@example.com"))
-                .andExpect(jsonPath("$.content[0].password").value("password123"))
                 .andExpect(jsonPath("$.content[0].role").value("USER"));
     }
 

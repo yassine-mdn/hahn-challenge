@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
@@ -32,6 +33,9 @@ class UserServiceMockTest {
 
     @Mock
     private UserMapper userMapper;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private UserService userService;
@@ -65,6 +69,7 @@ class UserServiceMockTest {
         when(userRepository.save(any(User.class))).thenReturn(mockUserEntity);
         when(userMapper.toDTO(mockUserEntity)).thenReturn(userDTO);
         when(userMapper.toEntity(userDTO)).thenReturn(mockUserEntity);
+        when(passwordEncoder.encode(userDTO.getPassword())).thenReturn(userDTO.getPassword());
 
         UserDTO result = userService.create(userDTO);
 

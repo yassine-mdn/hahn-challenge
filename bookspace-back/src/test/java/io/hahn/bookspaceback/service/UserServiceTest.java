@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDateTime;
@@ -32,10 +33,13 @@ public class UserServiceTest {
 
     private UserService userService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @BeforeEach
     void setUp() {
         userRepository.deleteAll();
-        userService = new UserService(userRepository, userMapper);
+        userService = new UserService(userRepository, userMapper, passwordEncoder);
     }
 
     private UserDTO generateUserDTO() {
@@ -57,7 +61,6 @@ public class UserServiceTest {
         assertNotNull(result.getId());
         assertEquals(userDTO.getUserName(), result.getUserName());
         assertEquals(userDTO.getEmail(), result.getEmail());
-        assertEquals(userDTO.getPassword(), result.getPassword());
         assertEquals(userDTO.getRole(), result.getRole());
     }
 

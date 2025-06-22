@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -19,6 +21,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public UserDTO create(UserDTO userDTO) {
         try {
@@ -32,6 +35,7 @@ public class UserService {
             }
 
             User saved = userMapper.toEntity(userDTO);
+            saved.setPassword(passwordEncoder.encode(userDTO.getPassword()));
             saved = userRepository.save(saved);
             return userMapper.toDTO(saved);
         } catch (CustomException ex) {
