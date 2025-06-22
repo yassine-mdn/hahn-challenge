@@ -12,8 +12,6 @@ public interface ReadingListMapper {
     ReadingListDTO toDTO(ReadingList book);
 
 
-
-
     @Mapping(target = "id", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "user", ignore = true)
