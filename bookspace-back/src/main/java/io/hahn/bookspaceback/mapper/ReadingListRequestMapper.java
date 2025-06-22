@@ -9,11 +9,17 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface ReadingListRequestMapper {
 
-    @Mapping(target = "userID", ignore = true)
-    @Mapping(target = "bookID", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "book", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "addedAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     ReadingList toEntity(ReadingListRequestDTO dto);
 
-    @Mapping(target = "userID", ignore = true)
-    @Mapping(target = "bookID", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "book", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "addedAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     void updateReadingListFromDTO(ReadingListRequestDTO dto, @MappingTarget ReadingList readingList);
 }
