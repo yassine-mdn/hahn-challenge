@@ -1,0 +1,63 @@
+databaseChangeLog:
+  - changeSet:
+        id: 1750685206104-6
+        author: yassine
+        objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+        changes:
+          - createSequence:
+              incrementBy: 50
+              sequenceName: review_seq
+              startValue: 1
+  - changeSet:
+      id: 1750685206104-7
+      author: yassine
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      preConditions:
+        - onFail: MARK_RAN
+          onError: MARK_RAN
+          not:
+            tableExists:
+              tableName: review
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_review
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: reading_list_id
+                  type: BIGINT
+              - column:
+                  name: comment
+                  type: VARCHAR(2000)
+              - column:
+                  name: created_at
+                  type: DATETIME
+            tableName: review
+  - changeSet:
+      id: 1750685206104-12
+      author: yassine
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      preConditions:
+        - onFail: MARK_RAN
+          onError: MARK_RAN
+          not:
+            uniqueConstraintExists:
+              tableName: review
+              constraintName: FK_REVIEW_ON_READINGLIST
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: reading_list_id
+            baseTableName: review
+            constraintName: FK_REVIEW_ON_READINGLIST
+            onDelete: CASCADE
+            referencedColumnNames: id
+            referencedTableName: reading_list
+
+
