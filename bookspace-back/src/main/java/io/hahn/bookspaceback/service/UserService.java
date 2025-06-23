@@ -24,8 +24,8 @@ public class UserService {
 
     public UserDTO create(UserDTO userDTO) {
         try {
-            if (userRepository.findByUserName(userDTO.getUserName()).isPresent()) {
-                log.error("Username {} already exists", userDTO.getUserName());
+            if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
+                log.error("Username {} already exists", userDTO.getUsername());
                 throw new CustomException("Username already exists");
             }
             if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
@@ -85,7 +85,7 @@ public class UserService {
     
     public UserDTO getByUsername(String username) {
         try {
-            return userRepository.findByUserName(username)
+            return userRepository.findByUsername(username)
                     .map(userMapper::toDTO)
                     .orElseThrow(() -> {
                         log.error("User with username {} not found", username);
@@ -113,7 +113,7 @@ public class UserService {
 
     public void delete(String username) {
         try {
-            userRepository.deleteByUserName(username);
+            userRepository.deleteByUsername(username);
         } catch (Exception ex) {
             log.error("Error deleting user with username {} : {}", username, ex.getMessage());
             throw new CustomException("Failed to delete user with username " + username + " : " + ex);

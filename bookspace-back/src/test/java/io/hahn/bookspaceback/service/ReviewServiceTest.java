@@ -68,7 +68,7 @@ public class ReviewServiceTest {
         );
 
         testUser = new User();
-        testUser.setUserName("testuser");
+        testUser.setUsername("testuser");
         testUser.setEmail("test@example.com");
         testUser.setPassword("password123");
         testUser = userRepository.save(testUser);
@@ -102,7 +102,7 @@ public class ReviewServiceTest {
 
         assertNotNull(result);
         assertNotNull(result.getId());
-        assertEquals(testUser.getUserName(), result.getUsername());
+        assertEquals(testUser.getUsername(), result.getUsername());
         assertEquals(testBook.getId(), result.getBook().getId());
         assertEquals(testBook.getTitle(), result.getBook().getTitle());
         assertEquals(testBook.getCoverUrl(), result.getBook().getCoverUrl());
@@ -171,7 +171,7 @@ public class ReviewServiceTest {
 
         assertNotNull(result);
         assertNotNull(result.getId());
-        assertEquals(testUser.getUserName(), result.getUsername());
+        assertEquals(testUser.getUsername(), result.getUsername());
         assertEquals(testBook.getId(), result.getBook().getId());
         assertEquals("Great book, highly recommended!", result.getComment());
         assertEquals(4, result.getRating());
@@ -189,7 +189,7 @@ public class ReviewServiceTest {
 
         assertNotNull(result);
         assertNotNull(result.getId());
-        assertEquals(testUser.getUserName(), result.getUsername());
+        assertEquals(testUser.getUsername(), result.getUsername());
         assertEquals(testBook.getId(), result.getBook().getId());
         assertEquals("Great book, highly recommended!", result.getComment());
         assertEquals(5, result.getRating());
@@ -204,7 +204,7 @@ public class ReviewServiceTest {
 
         assertNotNull(result);
         assertNotNull(result.getId());
-        assertEquals(testUser.getUserName(), result.getUsername());
+        assertEquals(testUser.getUsername(), result.getUsername());
         assertEquals(testBook.getId(), result.getBook().getId());
         assertNull(result.getComment());
         assertEquals(5, result.getRating());
@@ -219,7 +219,7 @@ public class ReviewServiceTest {
 
         assertNotNull(result);
         assertNotNull(result.getId());
-        assertEquals(testUser.getUserName(), result.getUsername());
+        assertEquals(testUser.getUsername(), result.getUsername());
         assertEquals(testBook.getId(), result.getBook().getId());
         assertEquals("", result.getComment());
         assertEquals(5, result.getRating());
@@ -235,7 +235,7 @@ public class ReviewServiceTest {
 
         assertNotNull(result);
         assertNotNull(result.getId());
-        assertEquals(testUser.getUserName(), result.getUsername());
+        assertEquals(testUser.getUsername(), result.getUsername());
         assertEquals(testBook.getId(), result.getBook().getId());
         assertEquals(longComment, result.getComment());
         assertEquals(5, result.getRating());
@@ -326,8 +326,8 @@ public class ReviewServiceTest {
         assertNotNull(firstReview);
         assertNotNull(secondReview);
         assertNotEquals(firstReview.getId(), secondReview.getId());
-        assertEquals(testUser.getUserName(), firstReview.getUsername());
-        assertEquals(testUser.getUserName(), secondReview.getUsername());
+        assertEquals(testUser.getUsername(), firstReview.getUsername());
+        assertEquals(testUser.getUsername(), secondReview.getUsername());
         assertEquals(testBook.getId(), firstReview.getBook().getId());
         assertEquals(secondBook.getId(), secondReview.getBook().getId());
     }
@@ -335,7 +335,7 @@ public class ReviewServiceTest {
     @Test
     void create_ShouldWork_WithMultipleUsersForSameBook() {
         User secondUser = new User();
-        secondUser.setUserName("seconduser");
+        secondUser.setUsername("seconduser");
         secondUser.setEmail("second@example.com");
         secondUser.setPassword("password456");
         secondUser = userRepository.save(secondUser);
@@ -358,8 +358,8 @@ public class ReviewServiceTest {
         assertNotNull(firstReview);
         assertNotNull(secondReview);
         assertNotEquals(firstReview.getId(), secondReview.getId());
-        assertEquals(testUser.getUserName(), firstReview.getUsername());
-        assertEquals(secondUser.getUserName(), secondReview.getUsername());
+        assertEquals(testUser.getUsername(), firstReview.getUsername());
+        assertEquals(secondUser.getUsername(), secondReview.getUsername());
         assertEquals(testBook.getId(), firstReview.getBook().getId());
         assertEquals(testBook.getId(), secondReview.getBook().getId());
         assertEquals(5, firstReview.getRating());
@@ -376,7 +376,7 @@ public class ReviewServiceTest {
 
         // Create second user and reading list for same book
         User secondUser = new User();
-        secondUser.setUserName("seconduser");
+        secondUser.setUsername("seconduser");
         secondUser.setEmail("second@example.com");
         secondUser.setPassword("password456");
         secondUser = userRepository.save(secondUser);
@@ -422,7 +422,7 @@ public class ReviewServiceTest {
         // Create multiple users and reviews for the same book
         for (int i = 0; i < 5; i++) {
             User user = new User();
-            user.setUserName("user" + i);
+            user.setUsername("user" + i);
             user.setEmail("user" + i + "@example.com");
             user.setPassword("password" + i);
             user = userRepository.save(user);
@@ -517,24 +517,24 @@ public class ReviewServiceTest {
         requestDTO2.setComment("Second review by same user!");
         ReviewDTO review2 = reviewService.create(requestDTO2);
 
-        PageWrapper<ReviewDTO> result = reviewService.getAllByUsername(testUser.getUserName(), 0, 10);
+        PageWrapper<ReviewDTO> result = reviewService.getAllByUsername(testUser.getUsername(), 0, 10);
 
         assertNotNull(result);
         assertEquals(2, result.getContent().size());
         assertTrue(result.getContent().stream().anyMatch(r -> r.getId().equals(review1.getId())));
         assertTrue(result.getContent().stream().anyMatch(r -> r.getId().equals(review2.getId())));
-        assertTrue(result.getContent().stream().allMatch(r -> r.getUsername().equals(testUser.getUserName())));
+        assertTrue(result.getContent().stream().allMatch(r -> r.getUsername().equals(testUser.getUsername())));
     }
 
     @Test
     void getAllByUsername_ShouldReturnEmptyPage_WhenNoReviewsExistForUser() {
         User newUser = new User();
-        newUser.setUserName("newuser");
+        newUser.setUsername("newuser");
         newUser.setEmail("new@example.com");
         newUser.setPassword("newpassword");
         newUser = userRepository.save(newUser);
 
-        PageWrapper<ReviewDTO> result = reviewService.getAllByUsername(newUser.getUserName(), 0, 10);
+        PageWrapper<ReviewDTO> result = reviewService.getAllByUsername(newUser.getUsername(), 0, 10);
 
         assertNotNull(result);
         assertTrue(result.getContent().isEmpty());
@@ -565,18 +565,18 @@ public class ReviewServiceTest {
         }
 
         // Test first page with page size 2
-        PageWrapper<ReviewDTO> firstPage = reviewService.getAllByUsername(testUser.getUserName(), 0, 2);
+        PageWrapper<ReviewDTO> firstPage = reviewService.getAllByUsername(testUser.getUsername(), 0, 2);
         assertNotNull(firstPage);
         assertEquals(2, firstPage.getContent().size());
         assertEquals(5, firstPage.getTotalElements());
 
         // Test second page
-        PageWrapper<ReviewDTO> secondPage = reviewService.getAllByUsername(testUser.getUserName(), 1, 2);
+        PageWrapper<ReviewDTO> secondPage = reviewService.getAllByUsername(testUser.getUsername(), 1, 2);
         assertNotNull(secondPage);
         assertEquals(2, secondPage.getContent().size());
 
         // Test third page
-        PageWrapper<ReviewDTO> thirdPage = reviewService.getAllByUsername(testUser.getUserName(), 2, 2);
+        PageWrapper<ReviewDTO> thirdPage = reviewService.getAllByUsername(testUser.getUsername(), 2, 2);
         assertNotNull(thirdPage);
         assertEquals(1, thirdPage.getContent().size());
     }
@@ -584,7 +584,7 @@ public class ReviewServiceTest {
     @Test
     void getAllByUsername_ShouldThrowCustomException_WhenPageNumberIsNegative() {
         CustomException exception = assertThrows(CustomException.class,
-                () -> reviewService.getAllByUsername(testUser.getUserName(), -1, 10));
+                () -> reviewService.getAllByUsername(testUser.getUsername(), -1, 10));
 
         assertEquals("Invalid pagination parameters", exception.getMessage());
     }
@@ -592,7 +592,7 @@ public class ReviewServiceTest {
     @Test
     void getAllByUsername_ShouldThrowCustomException_WhenPageSizeIsZero() {
         CustomException exception = assertThrows(CustomException.class,
-                () -> reviewService.getAllByUsername(testUser.getUserName(), 0, 0));
+                () -> reviewService.getAllByUsername(testUser.getUsername(), 0, 0));
 
         assertEquals("Invalid pagination parameters", exception.getMessage());
     }
@@ -600,7 +600,7 @@ public class ReviewServiceTest {
     @Test
     void getAllByUsername_ShouldThrowCustomException_WhenPageSizeIsNegative() {
         CustomException exception = assertThrows(CustomException.class,
-                () -> reviewService.getAllByUsername(testUser.getUserName(), 0, -5));
+                () -> reviewService.getAllByUsername(testUser.getUsername(), 0, -5));
 
         assertEquals("Invalid pagination parameters", exception.getMessage());
     }
@@ -657,7 +657,7 @@ public class ReviewServiceTest {
         ReviewRequestDTO requestDTO = generateReviewRequestDTO();
         ReviewDTO createdReview = reviewService.create(requestDTO);
 
-        PageWrapper<ReviewDTO> result = reviewService.getAllByUsername(testUser.getUserName(), 0, 10);
+        PageWrapper<ReviewDTO> result = reviewService.getAllByUsername(testUser.getUsername(), 0, 10);
 
         assertNotNull(result);
         assertEquals(1, result.getContent().size());
@@ -697,7 +697,7 @@ public class ReviewServiceTest {
 
         // Create another user with a review to ensure other reviews are not affected
         User otherUser = new User();
-        otherUser.setUserName("otheruser");
+        otherUser.setUsername("otheruser");
         otherUser.setEmail("other@example.com");
         otherUser.setPassword("otherpassword");
         otherUser = userRepository.save(otherUser);
@@ -731,7 +731,7 @@ public class ReviewServiceTest {
         assertTrue(reviewRepository.existsById(otherUserReview.getId()));
 
         // Verify the remaining review belongs to the other user
-        PageWrapper<ReviewDTO> remainingReviews = reviewService.getAllByUsername(otherUser.getUserName(), 0, 10);
+        PageWrapper<ReviewDTO> remainingReviews = reviewService.getAllByUsername(otherUser.getUsername(), 0, 10);
         assertEquals(1, remainingReviews.getContent().size());
         assertEquals(otherUserReview.getId(), remainingReviews.getContent().get(0).getId());
     }
@@ -762,7 +762,7 @@ public class ReviewServiceTest {
 
         // Create second user
         User secondUser = new User();
-        secondUser.setUserName("seconduser");
+        secondUser.setUsername("seconduser");
         secondUser.setEmail("second@example.com");
         secondUser.setPassword("secondpassword");
         secondUser = userRepository.save(secondUser);
@@ -781,7 +781,7 @@ public class ReviewServiceTest {
 
         // Create third user
         User thirdUser = new User();
-        thirdUser.setUserName("thirduser");
+        thirdUser.setUsername("thirduser");
         thirdUser.setEmail("third@example.com");
         thirdUser.setPassword("thirdpassword");
         thirdUser = userRepository.save(thirdUser);
@@ -811,13 +811,13 @@ public class ReviewServiceTest {
         assertTrue(reviewRepository.existsById(thirdUserReview.getId()));
 
         // Verify reviews can still be retrieved for remaining users
-        PageWrapper<ReviewDTO> testUserReviews = reviewService.getAllByUsername(testUser.getUserName(), 0, 10);
+        PageWrapper<ReviewDTO> testUserReviews = reviewService.getAllByUsername(testUser.getUsername(), 0, 10);
         assertEquals(1, testUserReviews.getContent().size());
 
-        PageWrapper<ReviewDTO> thirdUserReviews = reviewService.getAllByUsername(thirdUser.getUserName(), 0, 10);
+        PageWrapper<ReviewDTO> thirdUserReviews = reviewService.getAllByUsername(thirdUser.getUsername(), 0, 10);
         assertEquals(1, thirdUserReviews.getContent().size());
 
-        PageWrapper<ReviewDTO> secondUserReviews = reviewService.getAllByUsername(secondUser.getUserName(), 0, 10);
+        PageWrapper<ReviewDTO> secondUserReviews = reviewService.getAllByUsername(secondUser.getUsername(), 0, 10);
         assertEquals(0, secondUserReviews.getContent().size());
     }
 }

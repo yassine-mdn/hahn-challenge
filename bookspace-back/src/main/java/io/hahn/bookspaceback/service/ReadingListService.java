@@ -22,8 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
-import static io.hahn.bookspaceback.entity.enums.Status.*;
-
 @Slf4j
 @Service
 @Transactional
@@ -39,17 +37,17 @@ public class ReadingListService {
 
     public ReadingListDTO create(ReadingListRequestDTO readingListRequestDTO) {
         try {
-            User user = userRepository.findByUserName(readingListRequestDTO.getUserName()).orElseThrow(() -> {
-                log.error("User with username {} not found", readingListRequestDTO.getUserName());
-                return new CustomException("User with username " + readingListRequestDTO.getUserName() + " not found", HttpStatus.NOT_FOUND);
+            User user = userRepository.findByUsername(readingListRequestDTO.getUsername()).orElseThrow(() -> {
+                log.error("User with username {} not found", readingListRequestDTO.getUsername());
+                return new CustomException("User with username " + readingListRequestDTO.getUsername() + " not found", HttpStatus.NOT_FOUND);
             });
             Book book = bookRepository.findById(readingListRequestDTO.getBookID()).orElseThrow(() -> {
                 log.error("Book with id {} not found", readingListRequestDTO.getBookID());
                 return new CustomException("Book with id " + readingListRequestDTO.getBookID() + " not found", HttpStatus.NOT_FOUND);
             });
-            if (readingListRepository.existsByBook_IdAndUser_Id(readingListRequestDTO.getBookID(), readingListRequestDTO.getUserName())) {
-                log.error("Book with id {} already in {} ReadingList", readingListRequestDTO.getBookID(), readingListRequestDTO.getUserName());
-                throw new CustomException("Book with id " + readingListRequestDTO.getBookID() + "is already part of " + readingListRequestDTO.getUserName() + " reading list");
+            if (readingListRepository.existsByBook_IdAndUser_Id(readingListRequestDTO.getBookID(), readingListRequestDTO.getUsername())) {
+                log.error("Book with id {} already in {} ReadingList", readingListRequestDTO.getBookID(), readingListRequestDTO.getUsername());
+                throw new CustomException("Book with id " + readingListRequestDTO.getBookID() + "is already part of " + readingListRequestDTO.getUsername() + " reading list");
             }
             ReadingList saved = readingListRequestMapper.toEntity(readingListRequestDTO);
             applyStatusTimestamps(saved, readingListRequestDTO.getStatus());
@@ -102,11 +100,11 @@ public class ReadingListService {
             log.error("Error fetching readingList with id {}: {}", id, ex.getMessage(), ex);
             throw new CustomException("Failed to fetch readingList with id " + id + " : " + ex);
         }
-    }
+    }//user
 
     public ReadingListDTO getByBookIdAndUserUsername(Long bookId, String username) {
         try {
-            return readingListRepository.findByBook_IdAndUser_UserName(bookId, username)
+            return readingListRepository.findByBook_IdAndUser_Username(bookId, username)
                     .map(readingListMapper::toDTO)
                     .orElseThrow(() -> {
                         log.error("ReadingList with associated book id {} and username {} not found", bookId, username);
@@ -137,7 +135,7 @@ public class ReadingListService {
             throw new CustomException("Invalid pagination parameters");
         }
         try {
-            return new PageWrapper<>(readingListRepository.findAllByUser_UserName(username, PageRequest.of(pageNumber, pageSize)).map(readingListMapper::toDTO));
+            return new PageWrapper<>(readingListRepository.findAllByUser_Username(username, PageRequest.of(pageNumber, pageSize)).map(readingListMapper::toDTO));
         } catch (Exception ex) {
             log.error("Error fetching all readingLists for user {} : {}", username, ex.getMessage());
             throw new CustomException("Failed to fetch all readingLists : " + ex);

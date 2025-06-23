@@ -7,7 +7,7 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface ReadingListMapper {
 
-    @Mapping(target = "userName", source = "user.userName")
+    @Mapping(target = "username", source = "user.username")
     @Mapping(target = "book", source = "book")
     ReadingListDTO toDTO(ReadingList book);
 

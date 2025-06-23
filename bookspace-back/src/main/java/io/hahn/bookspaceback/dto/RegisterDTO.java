@@ -9,7 +9,7 @@ import lombok.Data;
 public class RegisterDTO {
     @Size(min = 3, max = 15, message = "Username must be between 3 and 15 characters")
     @Pattern(message = "Username must contain only alphanumeric characters and hyphens (-)", regexp = "^[a-zA-Z0-9-]+$")
-    private String userName;
+    private String username;
     @Email(message = "Invalid email format")
     private String email;
     @Size(min = 6, max = 20, message = "Password must be between 6 and 20 characters")

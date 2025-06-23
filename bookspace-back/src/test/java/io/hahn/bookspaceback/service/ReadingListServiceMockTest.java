@@ -63,7 +63,7 @@ class ReadingListServiceMockTest {
     @BeforeEach
     void setUp() {
         readingListRequestDTO = new ReadingListRequestDTO();
-        readingListRequestDTO.setUserName("Test UUID");
+        readingListRequestDTO.setUsername("Test UUID");
         readingListRequestDTO.setBookID(1L);
         readingListRequestDTO.setStatus(Status.READING);
         readingListRequestDTO.setRating(4);
@@ -75,7 +75,7 @@ class ReadingListServiceMockTest {
 
         readingListDTO = new ReadingListDTO();
         readingListDTO.setId(1L);
-        readingListDTO.setUserName("Test User");
+        readingListDTO.setUsername("Test User");
         readingListDTO.setBook(bookBarebonesDTO);
         readingListDTO.setAddedAt(LocalDateTime.now());
         readingListDTO.setStartedAt(LocalDateTime.now());
@@ -85,7 +85,7 @@ class ReadingListServiceMockTest {
 
         mockUserEntity = new User();
         ReflectionTestUtils.setField(mockUserEntity, "id", "Test UUID");
-        ReflectionTestUtils.setField(mockUserEntity, "userName", "Test User");
+        ReflectionTestUtils.setField(mockUserEntity, "username", "Test User");
 
         mockBookEntity = new Book();
         ReflectionTestUtils.setField(mockBookEntity, "id", 1L);
@@ -105,7 +105,7 @@ class ReadingListServiceMockTest {
 
     @Test
     void create_ShouldReturnReadingListDTO_WhenReadingListIsCreatedSuccessfully() {
-        when(userRepository.findByUserName(readingListRequestDTO.getUserName())).thenReturn(Optional.of(mockUserEntity));
+        when(userRepository.findByUsername(readingListRequestDTO.getUsername())).thenReturn(Optional.of(mockUserEntity));
         when(bookRepository.findById(readingListRequestDTO.getBookID())).thenReturn(Optional.of(mockBookEntity));
         when(readingListRequestMapper.toEntity(readingListRequestDTO)).thenReturn(mockReadingListEntity);
         when(readingListRepository.save(mockReadingListEntity)).thenReturn(mockReadingListEntity);
@@ -115,7 +115,7 @@ class ReadingListServiceMockTest {
 
         assertNotNull(result);
         assertEquals(readingListDTO.getId(), result.getId());
-        assertEquals(readingListDTO.getUserName(), result.getUserName());
+        assertEquals(readingListDTO.getUsername(), result.getUsername());
         assertEquals(readingListDTO.getBook().getId(), result.getBook().getId());
         assertEquals(readingListDTO.getStatus(), result.getStatus());
         assertEquals(readingListDTO.getRating(), result.getRating());
@@ -123,17 +123,17 @@ class ReadingListServiceMockTest {
 
     @Test
     void create_ShouldThrowCustomException_WhenUserNotFound() {
-        when(userRepository.findByUserName(readingListRequestDTO.getUserName())).thenReturn(Optional.empty());
+        when(userRepository.findByUsername(readingListRequestDTO.getUsername())).thenReturn(Optional.empty());
 
         CustomException exception = assertThrows(CustomException.class, () -> readingListService.create(readingListRequestDTO));
 
-        assertEquals("User with username " + readingListRequestDTO.getUserName() + " not found", exception.getMessage());
+        assertEquals("User with username " + readingListRequestDTO.getUsername() + " not found", exception.getMessage());
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
     }
 
     @Test
     void create_ShouldThrowCustomException_WhenBookNotFound() {
-        when(userRepository.findByUserName(readingListRequestDTO.getUserName())).thenReturn(Optional.of(mockUserEntity));
+        when(userRepository.findByUsername(readingListRequestDTO.getUsername())).thenReturn(Optional.of(mockUserEntity));
         when(bookRepository.findById(readingListRequestDTO.getBookID())).thenReturn(Optional.empty());
 
         CustomException exception = assertThrows(CustomException.class, () -> readingListService.create(readingListRequestDTO));
@@ -144,19 +144,19 @@ class ReadingListServiceMockTest {
 
     @Test
     void create_ShouldThrowCustomException_WhenBookIsAlreadyInUsersReadingList() {
-        when(userRepository.findByUserName(readingListRequestDTO.getUserName())).thenReturn(Optional.of(mockUserEntity));
+        when(userRepository.findByUsername(readingListRequestDTO.getUsername())).thenReturn(Optional.of(mockUserEntity));
         when(bookRepository.findById(readingListRequestDTO.getBookID())).thenReturn(Optional.of(mockBookEntity));
-        when(readingListRepository.existsByBook_IdAndUser_Id(readingListRequestDTO.getBookID(),readingListRequestDTO.getUserName())).thenReturn(true);
+        when(readingListRepository.existsByBook_IdAndUser_Id(readingListRequestDTO.getBookID(),readingListRequestDTO.getUsername())).thenReturn(true);
 
         CustomException exception = assertThrows(CustomException.class, () -> readingListService.create(readingListRequestDTO));
 
-        assertEquals("Book with id "+ readingListRequestDTO.getBookID() + "is already part of "+readingListRequestDTO.getUserName()+" reading list", exception.getMessage());
+        assertEquals("Book with id "+ readingListRequestDTO.getBookID() + "is already part of "+readingListRequestDTO.getUsername()+" reading list", exception.getMessage());
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
     }
 
     @Test
     void create_ShouldThrowCustomException_WhenExceptionOccurs() {
-        when(userRepository.findByUserName(readingListRequestDTO.getUserName())).thenReturn(Optional.of(mockUserEntity));
+        when(userRepository.findByUsername(readingListRequestDTO.getUsername())).thenReturn(Optional.of(mockUserEntity));
         when(bookRepository.findById(readingListRequestDTO.getBookID())).thenReturn(Optional.of(mockBookEntity));
         when(readingListRequestMapper.toEntity(readingListRequestDTO)).thenReturn(mockReadingListEntity);
         when(readingListRepository.save(mockReadingListEntity)).thenThrow(new RuntimeException("Database error"));
@@ -178,7 +178,7 @@ class ReadingListServiceMockTest {
 
         assertNotNull(result);
         assertEquals(readingListDTO.getId(), result.getId());
-        assertEquals(readingListDTO.getUserName(), result.getUserName());
+        assertEquals(readingListDTO.getUsername(), result.getUsername());
         assertEquals(readingListDTO.getBook().getId(), result.getBook().getId());
         assertEquals(readingListDTO.getStatus(), result.getStatus());
         assertEquals(readingListDTO.getRating(), result.getRating());
@@ -215,7 +215,7 @@ class ReadingListServiceMockTest {
 
         assertNotNull(result);
         assertEquals(readingListDTO.getId(), result.getId());
-        assertEquals(readingListDTO.getUserName(), result.getUserName());
+        assertEquals(readingListDTO.getUsername(), result.getUsername());
         assertEquals(readingListDTO.getBook().getId(), result.getBook().getId());
         assertEquals(readingListDTO.getStatus(), result.getStatus());
         assertEquals(readingListDTO.getRating(), result.getRating());

@@ -35,7 +35,7 @@ class ReadingListMapperTest {
         
         mockUser = new User();
         mockUser.setId("test-uuid");
-        mockUser.setUserName("test user");
+        mockUser.setUsername("test user");
         mockUser.setEmail("test@example.com");
         mockUser.setPassword("password");
         mockUser.setRole(Role.USER);
@@ -72,7 +72,7 @@ class ReadingListMapperTest {
 
         assertNotNull(result);
         assertEquals(mockReadingList.getId(), result.getId());
-        assertEquals(mockReadingList.getUser().getUserName(), result.getUserName());
+        assertEquals(mockReadingList.getUser().getUsername(), result.getUsername());
         assertNotNull(result.getBook());
         assertEquals(mockReadingList.getBook().getId(), result.getBook().getId());
         assertEquals(mockReadingList.getBook().getTitle(), result.getBook().getTitle());
@@ -96,7 +96,7 @@ class ReadingListMapperTest {
         updateDTO.setId(2L);
         updateDTO.setStatus(Status.COMPLETED);
         updateDTO.setRating(5);
-        updateDTO.setUserName("new user");
+        updateDTO.setUsername("new user");
         updateDTO.setBook(mockBookBarebonesDTO);
         updateDTO.setCompletedAt(LocalDateTime.now());
 
@@ -104,7 +104,7 @@ class ReadingListMapperTest {
         readingListMapper.updateReadingListFromDto(updateDTO, readingListToUpdate);
 
         assertNotEquals(2L, readingListToUpdate.getId());
-        assertNotEquals(updateDTO.getUserName(),readingListToUpdate.getUser().getUserName());
+        assertNotEquals(updateDTO.getUsername(),readingListToUpdate.getUser().getUsername());
         assertNotEquals(updateDTO.getBook().getId(), readingListToUpdate.getBook().getId());
         assertNull(readingListToUpdate.getCompletedAt());
         assertEquals(Status.COMPLETED, readingListToUpdate.getStatus());

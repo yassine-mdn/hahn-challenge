@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.hahn.bookspaceback.entity.enums.Status;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -13,7 +12,7 @@ public class ReadingListRequestDTO {
 
     // userId would be inferred from the logged-in user in the controller layer
     @JsonIgnore
-    private String userName;
+    private String username;
     @NotNull
     private Long bookID;
     private Status status;

@@ -24,13 +24,13 @@ public class ReadingListController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ReadingListDTO> create(@PathVariable(name = "username") String username, @RequestBody @Valid ReadingListRequestDTO readingListRequestDTO, HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
-        readingListRequestDTO.setUserName(username);
+        readingListRequestDTO.setUsername(username);
         ReadingListDTO createdContent = readingListService.create(readingListRequestDTO);
         return ResponseEntity.ok(createdContent);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("#username == principal.user.userName or hasAuthority('ADMIN')")
+    @PreAuthorize("#username == principal.user.username or hasAuthority('ADMIN')")
     public ResponseEntity<ReadingListDTO> update(@PathVariable(name = "username") String username, @PathVariable(name = "id") Long id, @Valid @RequestBody ReadingListRequestDTO readingListRequestDTO) {
         ReadingListDTO updatedContent = readingListService.update(id, readingListRequestDTO);
         return ResponseEntity.ok(updatedContent);
@@ -59,7 +59,7 @@ public class ReadingListController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("#username == principal.user.userName or hasAuthority('ADMIN')")
+    @PreAuthorize("#username == principal.user.username or hasAuthority('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable(name = "username") String username, @PathVariable(name = "id") Long id) {
         readingListService.delete(id);
         return ResponseEntity.noContent().build();

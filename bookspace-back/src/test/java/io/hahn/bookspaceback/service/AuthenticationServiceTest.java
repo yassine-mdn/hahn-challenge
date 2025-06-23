@@ -56,7 +56,7 @@ public class AuthenticationServiceTest {
         
         // Create a test user
         testUserDTO = new UserDTO();
-        testUserDTO.setUserName("testuser");
+        testUserDTO.setUsername("testuser");
         testUserDTO.setEmail("test@example.com");
         testUserDTO.setPassword("password123");
         testUserDTO.setRole(Role.USER);
@@ -72,7 +72,7 @@ public class AuthenticationServiceTest {
 
     @Test
     void authenticate_ShouldReturnAuthResponseDTO_WhenCredentialsAreValid() {
-        var user = userRepository.findByUserNameOrEmail("testuser", "testuser").orElseThrow();
+        var user = userRepository.findByUsernameOrEmail("testuser", "testuser").orElseThrow();
         AuthenticationResponseDTO response = authenticationService.authenticate(authRequestDTO);
 
         assertNotNull(response);
@@ -148,7 +148,7 @@ public class AuthenticationServiceTest {
     void refreshToken_ShouldThrowCustomException_WhenUserNoLongerExists() {
         AuthenticationResponseDTO authResponse = authenticationService.authenticate(authRequestDTO);
         String refreshToken = authResponse.getRefreshToken();
-        User user = userRepository.findByUserName("testuser").orElseThrow();
+        User user = userRepository.findByUsername("testuser").orElseThrow();
         userRepository.delete(user);
 
         when(httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Bearer " + refreshToken);

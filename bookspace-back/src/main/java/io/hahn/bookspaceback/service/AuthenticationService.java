@@ -33,7 +33,7 @@ public class AuthenticationService {
 
     public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO authRequestDTO) {
         try {
-            SecurityUser user = userRepository.findByUserNameOrEmail(authRequestDTO.getUsername(), authRequestDTO.getUsername()).map(SecurityUser::new)
+            SecurityUser user = userRepository.findByUsernameOrEmail(authRequestDTO.getUsername(), authRequestDTO.getUsername()).map(SecurityUser::new)
                     .orElseThrow(() -> {
                         log.error("User with username {} not found", authRequestDTO.getUsername());
                         return new CustomException("User with username " + authRequestDTO.getUsername() + " not found", HttpStatus.NOT_FOUND);
@@ -63,8 +63,8 @@ public class AuthenticationService {
 
     public AuthenticationResponseDTO register(RegisterDTO registerDTO) {
         try {
-            if (userRepository.findByUserName(registerDTO.getUserName()).isPresent()) {
-                log.error("Username {} already exists", registerDTO.getUserName());
+            if (userRepository.findByUsername(registerDTO.getUsername()).isPresent()) {
+                log.error("Username {} already exists", registerDTO.getUsername());
                 throw new CustomException("Username already exists");
             }
             if (userRepository.findByEmail(registerDTO.getEmail()).isPresent()) {
@@ -72,7 +72,7 @@ public class AuthenticationService {
                 throw new CustomException("Email already exists");
             }
             User user = new User();
-            user.setUserName(registerDTO.getUserName());
+            user.setUsername(registerDTO.getUsername());
             user.setEmail(registerDTO.getEmail());
             user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
             user.setRole(Role.USER);
@@ -84,7 +84,7 @@ public class AuthenticationService {
             String refreshToken = jwtService.generateRefreshToken(securityUser);
 
             return AuthenticationResponseDTO.builder()
-                    .username(savedUser.getUserName())
+                    .username(savedUser.getUsername())
                     .role(savedUser.getRole())
                     .accessToken(token)
                     .refreshToken(refreshToken)
@@ -112,7 +112,7 @@ public class AuthenticationService {
             log.error("Request headers invalid");
             throw new CustomException("Request headers invalid", HttpStatus.UNAUTHORIZED);
         }
-        SecurityUser user = userRepository.findByUserNameOrEmail(username, username).map(SecurityUser::new)
+        SecurityUser user = userRepository.findByUsernameOrEmail(username, username).map(SecurityUser::new)
                 .orElseThrow(() -> {
                     log.error("User with username or email '{}' not found during refresh token process", username);
                     return new CustomException("User with username or email '" + username + "' not found while processing refresh token", HttpStatus.NOT_FOUND);
