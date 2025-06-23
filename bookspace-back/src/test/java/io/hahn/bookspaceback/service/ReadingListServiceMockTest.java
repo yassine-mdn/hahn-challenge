@@ -143,6 +143,18 @@ class ReadingListServiceMockTest {
     }
 
     @Test
+    void create_ShouldThrowCustomException_WhenBookIsAlreadyInUsersReadingList() {
+        when(userRepository.findByUserName(readingListRequestDTO.getUserName())).thenReturn(Optional.of(mockUserEntity));
+        when(bookRepository.findById(readingListRequestDTO.getBookID())).thenReturn(Optional.of(mockBookEntity));
+        when(readingListRepository.existsByBook_IdAndUser_Id(readingListRequestDTO.getBookID(),readingListRequestDTO.getUserName())).thenReturn(true);
+
+        CustomException exception = assertThrows(CustomException.class, () -> readingListService.create(readingListRequestDTO));
+
+        assertEquals("Book with id "+ readingListRequestDTO.getBookID() + "is already part of "+readingListRequestDTO.getUserName()+" reading list", exception.getMessage());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+    }
+
+    @Test
     void create_ShouldThrowCustomException_WhenExceptionOccurs() {
         when(userRepository.findByUserName(readingListRequestDTO.getUserName())).thenReturn(Optional.of(mockUserEntity));
         when(bookRepository.findById(readingListRequestDTO.getBookID())).thenReturn(Optional.of(mockBookEntity));

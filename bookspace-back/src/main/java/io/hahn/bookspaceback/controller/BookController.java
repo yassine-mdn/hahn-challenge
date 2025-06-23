@@ -2,6 +2,7 @@ package io.hahn.bookspaceback.controller;
 
 
 import io.hahn.bookspaceback.dto.BookDTO;
+import io.hahn.bookspaceback.dto.RatingCountDTO;
 import io.hahn.bookspaceback.service.BookService;
 import io.hahn.bookspaceback.util.PageWrapper;
 import lombok.AllArgsConstructor;
@@ -22,30 +23,65 @@ public class BookController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BookDTO> create(@RequestBody BookDTO bookDTO) {
-        BookDTO createdContent = bookService.create(bookDTO);
-        return ResponseEntity.ok(createdContent);
+        BookDTO createdBook = bookService.create(bookDTO);
+        return ResponseEntity.ok(createdBook);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BookDTO> update(@PathVariable Long id, @RequestBody BookDTO bookDTO) {
-        BookDTO updatedContent = bookService.update(id, bookDTO);
-        return ResponseEntity.ok(updatedContent);
+        BookDTO updatedBook = bookService.update(id, bookDTO);
+        return ResponseEntity.ok(updatedBook);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<BookDTO> getById(@PathVariable Long id) {
-        BookDTO content = bookService.getById(id);
-        return ResponseEntity.ok(content);
+        BookDTO book = bookService.getById(id);
+        return ResponseEntity.ok(book);
     }
 
     @GetMapping
     public ResponseEntity<PageWrapper<BookDTO>> getAll(
+            @RequestParam(name = "search", required = false) String search,
             @RequestParam(name = "page", required = false, defaultValue = "0") Integer pageNumber,
             @RequestParam(name = "size", required = false, defaultValue = "10") Integer pageSize
-            ) {
-        PageWrapper<BookDTO> contentList = bookService.getAll(pageNumber, pageSize);
-        return ResponseEntity.ok(contentList);
+    ) {
+        PageWrapper<BookDTO> bookList = bookService.getAll(search,pageNumber, pageSize);
+        return ResponseEntity.ok(bookList);
+    }
+
+    @GetMapping("/featured")
+    public ResponseEntity<PageWrapper<BookDTO>> getAllFeatured(
+            @RequestParam(name = "page", required = false, defaultValue = "0") Integer pageNumber,
+            @RequestParam(name = "size", required = false, defaultValue = "10") Integer pageSize
+    ){
+        PageWrapper<BookDTO> bookList = bookService.getFeatured(pageNumber, pageSize);
+        return ResponseEntity.ok(bookList);
+    }
+
+    @GetMapping("/popular")
+    public ResponseEntity<PageWrapper<BookDTO>> getAllPopular(
+            @RequestParam(name = "page", required = false, defaultValue = "0") Integer pageNumber,
+            @RequestParam(name = "size", required = false, defaultValue = "10") Integer pageSize
+    ) {
+        PageWrapper<BookDTO> bookList = bookService.getPopular(pageNumber, pageSize);
+        return ResponseEntity.ok(bookList);
+    }
+
+    @GetMapping("/{id}/similar")
+    public ResponseEntity<PageWrapper<BookDTO>> getAllSimilar(
+            @PathVariable Long id,
+            @RequestParam(name = "page", required = false, defaultValue = "0") Integer pageNumber,
+            @RequestParam(name = "size", required = false, defaultValue = "10") Integer pageSize
+    ) {
+        PageWrapper<BookDTO> bookList = bookService.getSimilar(id, pageNumber, pageSize);
+        return ResponseEntity.ok(bookList);
+    }
+
+    @GetMapping("/{id}/ratings")
+    public ResponseEntity<List<RatingCountDTO>> getAllRatings(@PathVariable Long id){
+        List<RatingCountDTO> ratings = bookService.getRatingCountById(id);
+        return ResponseEntity.ok(ratings);
     }
 
     @DeleteMapping("/{id}")

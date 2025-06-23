@@ -5,6 +5,7 @@ import io.hahn.bookspaceback.dto.ReadingListRequestDTO;
 import io.hahn.bookspaceback.entity.Book;
 import io.hahn.bookspaceback.entity.ReadingList;
 import io.hahn.bookspaceback.entity.User;
+import io.hahn.bookspaceback.entity.enums.Status;
 import io.hahn.bookspaceback.exception.CustomException;
 import io.hahn.bookspaceback.mapper.ReadingListMapper;
 import io.hahn.bookspaceback.mapper.ReadingListRequestMapper;
@@ -18,6 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+
+import static io.hahn.bookspaceback.entity.enums.Status.*;
 
 @Slf4j
 @Service
@@ -42,9 +47,12 @@ public class ReadingListService {
                 log.error("Book with id {} not found", readingListRequestDTO.getBookID());
                 return new CustomException("Book with id " + readingListRequestDTO.getBookID() + " not found", HttpStatus.NOT_FOUND);
             });
-            //TODO : check if user already has book in list
-
+            if (readingListRepository.existsByBook_IdAndUser_Id(readingListRequestDTO.getBookID(), readingListRequestDTO.getUserName())) {
+                log.error("Book with id {} already in {} ReadingList", readingListRequestDTO.getBookID(), readingListRequestDTO.getUserName());
+                throw new CustomException("Book with id " + readingListRequestDTO.getBookID() + "is already part of " + readingListRequestDTO.getUserName() + " reading list");
+            }
             ReadingList saved = readingListRequestMapper.toEntity(readingListRequestDTO);
+            applyStatusTimestamps(saved, readingListRequestDTO.getStatus());
             saved.setBook(book);
             saved.setUser(user);
             saved = readingListRepository.save(saved);
@@ -62,6 +70,7 @@ public class ReadingListService {
             ReadingList updatedReadingList = readingListRepository.findById(id)
                     .map(readingList -> {
                         readingListRequestMapper.updateReadingListFromDTO(readingListRequestDTO, readingList);
+                        applyStatusTimestamps(readingList, readingListRequestDTO.getStatus());
                         return readingList;
                     })
                     .orElseThrow(() -> {
@@ -92,6 +101,22 @@ public class ReadingListService {
         } catch (Exception ex) {
             log.error("Error fetching readingList with id {}: {}", id, ex.getMessage(), ex);
             throw new CustomException("Failed to fetch readingList with id " + id + " : " + ex);
+        }
+    }
+
+    public ReadingListDTO getByBookIdAndUserUsername(Long bookId, String username) {
+        try {
+            return readingListRepository.findByBook_IdAndUser_UserName(bookId, username)
+                    .map(readingListMapper::toDTO)
+                    .orElseThrow(() -> {
+                        log.error("ReadingList with associated book id {} and username {} not found", bookId, username);
+                        return new CustomException("ReadingList with associated book id " + bookId + " and username " + username + " not found", HttpStatus.NOT_FOUND);
+                    });
+        } catch (CustomException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            log.error("Error fetching readingList for bookId {} and username {}: {}", bookId, username, ex.getMessage(), ex);
+            throw new CustomException("Failed to fetch readingList for bookId " + bookId + " and username " + username + " : " + ex);
         }
     }
 
@@ -127,4 +152,35 @@ public class ReadingListService {
             throw new CustomException("Failed to delete readingList with id " + id + " : " + ex);
         }
     }
+
+    private void applyStatusTimestamps(ReadingList saved, Status status) {
+        LocalDateTime now = LocalDateTime.now();
+
+        switch (status) {
+            case PLAN_TO_READ -> {
+                saved.setStartedAt(null);
+                saved.setCompletedAt(null);
+            }
+            case READING -> {
+                if (saved.getStartedAt() == null) {
+                    saved.setStartedAt(now);
+                }
+                saved.setCompletedAt(null);
+            }
+            case COMPLETED, DROPPED -> {
+                if (saved.getStartedAt() == null) {
+                    saved.setStartedAt(now);
+                }
+                if (saved.getCompletedAt() == null) {
+                    saved.setCompletedAt(now);
+                }
+            }
+            case ON_HOLD -> {
+                if (saved.getStartedAt() == null) {
+                    saved.setStartedAt(now);
+                }
+            }
+        }
+    }
+
 }
