@@ -1,12 +1,15 @@
 import './App.css'
-import {Button} from "@/components/ui/button.tsx";
+import {Route, Routes} from "react-router";
+import BaseLayout from "@/layouts/BaseLayout.tsx";
 
 function App() {
 
     return (
-        <div className={"flex items-center justify-center h-screen w-screen"}>
-            <Button>Test</Button>
-        </div>
+        <Routes>
+            <Route element={<BaseLayout/>}>
+                <Route index element={<div />} />
+            </Route>
+        </Routes>
     )
 }
 
