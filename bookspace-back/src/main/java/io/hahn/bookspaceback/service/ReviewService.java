@@ -38,7 +38,7 @@ public class ReviewService {
                 log.error("ReadingList with id {} not found", reviewRequestDTO.getReadingListId());
                 return new CustomException("ReadingList with id " + reviewRequestDTO.getReadingListId() + " not found", HttpStatus.NOT_FOUND);
             });
-            if (!readingList.getUser().getUserName().equals(authenticatedUsername)) {
+            if (!readingList.getUser().getUsername().equals(authenticatedUsername)) {
                 log.error("User does not have access to reading list {}", reviewRequestDTO.getReadingListId());
                 throw new CustomException("User does not have access to reading list", HttpStatus.FORBIDDEN);
             }
@@ -102,7 +102,7 @@ public class ReviewService {
             throw new CustomException("Invalid pagination parameters");
         }
         try {
-            return new PageWrapper<>(reviewRepository.findAllByReadingList_User_UserName(username, PageRequest.of(pageNumber, pageSize)).map(reviewMapper::toDTO));
+            return new PageWrapper<>(reviewRepository.findAllByReadingList_User_Username(username, PageRequest.of(pageNumber, pageSize)).map(reviewMapper::toDTO));
         } catch (Exception ex) {
             log.error("Error fetching reviews for username {} : {}", username, ex.getMessage());
             throw new CustomException("Failed to fetch reviews for username " + username + " : " + ex);

@@ -60,14 +60,14 @@ class ReadingListControllerTest {
                 .build();
 
         mockReadingListRequestDTO = new ReadingListRequestDTO();
-        mockReadingListRequestDTO.setUserName(USERNAME);
+        mockReadingListRequestDTO.setUsername(USERNAME);
         mockReadingListRequestDTO.setBookID(1L);
         mockReadingListRequestDTO.setStatus(Status.READING);
         mockReadingListRequestDTO.setRating(4);
 
         mockReadingListDTO = new ReadingListDTO();
         mockReadingListDTO.setId(1L);
-        mockReadingListDTO.setUserName(USERNAME);
+        mockReadingListDTO.setUsername(USERNAME);
         
         BookBarebonesDTO bookDTO = new BookBarebonesDTO();
         bookDTO.setId(1L);
@@ -90,7 +90,7 @@ class ReadingListControllerTest {
                         .content(jsonRequest))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.userName").value(USERNAME))
+                .andExpect(jsonPath("$.username").value(USERNAME))
                 .andExpect(jsonPath("$.book.id").value(1))
                 .andExpect(jsonPath("$.book.title").value("Test Book"))
                 .andExpect(jsonPath("$.status").value("READING"))
@@ -121,7 +121,7 @@ class ReadingListControllerTest {
                         .content(jsonRequest))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.userName").value(USERNAME))
+                .andExpect(jsonPath("$.username").value(USERNAME))
                 .andExpect(jsonPath("$.book.id").value(1))
                 .andExpect(jsonPath("$.book.title").value("Test Book"))
                 .andExpect(jsonPath("$.status").value("READING"))
@@ -150,7 +150,7 @@ class ReadingListControllerTest {
         mockMvc.perform(get("/api/v1/users/{username}/reading-list/{id}", USERNAME, id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.userName").value(USERNAME))
+                .andExpect(jsonPath("$.username").value(USERNAME))
                 .andExpect(jsonPath("$.book.id").value(1))
                 .andExpect(jsonPath("$.book.title").value("Test Book"))
                 .andExpect(jsonPath("$.status").value("READING"))
@@ -177,7 +177,7 @@ class ReadingListControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].id").value(1))
-                .andExpect(jsonPath("$.content[0].userName").value(USERNAME))
+                .andExpect(jsonPath("$.content[0].username").value(USERNAME))
                 .andExpect(jsonPath("$.content[0].book.id").value(1))
                 .andExpect(jsonPath("$.content[0].book.title").value("Test Book"))
                 .andExpect(jsonPath("$.content[0].status").value("READING"))

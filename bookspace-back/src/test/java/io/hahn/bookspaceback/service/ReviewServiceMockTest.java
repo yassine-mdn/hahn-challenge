@@ -77,7 +77,7 @@ class ReviewServiceMockTest {
 
         mockUserEntity = new User();
         ReflectionTestUtils.setField(mockUserEntity, "id", "test-uuid");
-        ReflectionTestUtils.setField(mockUserEntity, "userName", "testUser");
+        ReflectionTestUtils.setField(mockUserEntity, "username", "testUser");
 
         mockBookEntity = new Book();
         ReflectionTestUtils.setField(mockBookEntity, "id", 1L);

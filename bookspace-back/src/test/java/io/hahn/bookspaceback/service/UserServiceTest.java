@@ -41,7 +41,7 @@ public class UserServiceTest {
 
     private UserDTO generateUserDTO() {
         UserDTO userDTO = new UserDTO();
-        userDTO.setUserName("testuser");
+        userDTO.setUsername("testuser");
         userDTO.setEmail("test@example.com");
         userDTO.setPassword("password123");
         userDTO.setRole(Role.USER);
@@ -56,7 +56,7 @@ public class UserServiceTest {
 
         assertNotNull(result);
         assertNotNull(result.getId());
-        assertEquals(userDTO.getUserName(), result.getUserName());
+        assertEquals(userDTO.getUsername(), result.getUsername());
         assertEquals(userDTO.getEmail(), result.getEmail());
         assertEquals(userDTO.getRole(), result.getRole());
     }
@@ -80,7 +80,7 @@ public class UserServiceTest {
         userService.create(userDTO);
         
         UserDTO duplicateUser = generateUserDTO();
-        duplicateUser.setUserName("differentuser");
+        duplicateUser.setUsername("differentuser");
 
         CustomException exception = assertThrows(CustomException.class, () -> userService.create(duplicateUser));
 
@@ -99,7 +99,7 @@ public class UserServiceTest {
 
         assertNotNull(result);
         assertEquals(savedUser.getId(), result.getId());
-        assertEquals(savedUser.getUserName(), result.getUserName());
+        assertEquals(savedUser.getUsername(), result.getUsername());
         assertEquals(savedUser.getEmail(), result.getEmail());
         assertEquals("newpassword123", result.getPassword());
         assertEquals(savedUser.getRole(), result.getRole());
@@ -124,7 +124,7 @@ public class UserServiceTest {
 
         assertNotNull(result);
         assertEquals(savedUser.getId(), result.getId());
-        assertEquals(savedUser.getUserName(), result.getUserName());
+        assertEquals(savedUser.getUsername(), result.getUsername());
         assertEquals(savedUser.getEmail(), result.getEmail());
         assertEquals(savedUser.getPassword(), result.getPassword());
         assertEquals(savedUser.getRole(), result.getRole());
@@ -144,7 +144,7 @@ public class UserServiceTest {
         userService.create(userDTO);
         
         UserDTO secondUser = generateUserDTO();
-        secondUser.setUserName("seconduser");
+        secondUser.setUsername("seconduser");
         secondUser.setEmail("second@example.com");
         userService.create(secondUser);
 
@@ -173,10 +173,10 @@ public class UserServiceTest {
         UserDTO userDTO = generateUserDTO();
         UserDTO savedUser = userService.create(userDTO);
 
-        userService.delete(savedUser.getUserName());
+        userService.delete(savedUser.getUsername());
 
         CustomException exception = assertThrows(CustomException.class, 
-            () -> userService.getByUsername(savedUser.getUserName()));
+            () -> userService.getByUsername(savedUser.getUsername()));
         
         assertTrue(exception.getMessage().contains("not found"));
     }

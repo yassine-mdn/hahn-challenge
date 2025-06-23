@@ -11,10 +11,10 @@ import java.util.Optional;
 @Repository
 public interface ReadingListRepository extends JpaRepository<ReadingList, Long> {
 
-    Page<ReadingList> findAllByUser_UserName(String username, Pageable pageable);
+    Page<ReadingList> findAllByUser_Username(String username, Pageable pageable);
 
     Boolean existsByBook_IdAndUser_Id(Long bookId, String userId);
 
-    Optional<ReadingList> findByBook_IdAndUser_UserName(Long bookId, String userId);
+    Optional<ReadingList> findByBook_IdAndUser_Username(Long bookId, String userId);
 
 }

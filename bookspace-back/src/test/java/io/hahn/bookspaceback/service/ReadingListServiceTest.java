@@ -61,7 +61,7 @@ public class ReadingListServiceTest {
         );
 
         testUser = new User();
-        testUser.setUserName("testuser");
+        testUser.setUsername("testuser");
         testUser.setEmail("test@example.com");
         testUser.setPassword("password123");
         testUser = userRepository.save(testUser);
@@ -75,7 +75,7 @@ public class ReadingListServiceTest {
 
     private ReadingListRequestDTO generateReadingListRequestDTO() {
         ReadingListRequestDTO dto = new ReadingListRequestDTO();
-        dto.setUserName(testUser.getUserName());
+        dto.setUsername(testUser.getUsername());
         dto.setBookID(testBook.getId());
         dto.setStatus(Status.READING);
         dto.setRating(4);
@@ -90,7 +90,7 @@ public class ReadingListServiceTest {
 
         assertNotNull(result);
         assertNotNull(result.getId());
-        assertEquals(testUser.getUserName(), result.getUserName());
+        assertEquals(testUser.getUsername(), result.getUsername());
         assertEquals(testBook.getId(), result.getBook().getId());
         assertEquals(testBook.getTitle(), result.getBook().getTitle());
         assertEquals(Status.READING, result.getStatus());
@@ -100,11 +100,11 @@ public class ReadingListServiceTest {
     @Test
     void create_ShouldThrowCustomException_WhenUserNotFound() {
         ReadingListRequestDTO requestDTO = generateReadingListRequestDTO();
-        requestDTO.setUserName("non-existent-id");
+        requestDTO.setUsername("non-existent-id");
 
         CustomException exception = assertThrows(CustomException.class, () -> readingListService.create(requestDTO));
 
-        assertTrue(exception.getMessage().contains("User with username " + requestDTO.getUserName() + " not found"));
+        assertTrue(exception.getMessage().contains("User with username " + requestDTO.getUsername() + " not found"));
 
     }
 
@@ -132,7 +132,7 @@ public class ReadingListServiceTest {
 
         assertNotNull(result);
         assertEquals(savedReadingList.getId(), result.getId());
-        assertEquals(testUser.getUserName(), result.getUserName());
+        assertEquals(testUser.getUsername(), result.getUsername());
         assertEquals(testBook.getId(), result.getBook().getId());
         assertEquals(Status.COMPLETED, result.getStatus());
         assertEquals(5, result.getRating());
@@ -158,7 +158,7 @@ public class ReadingListServiceTest {
 
         assertNotNull(result);
         assertEquals(savedReadingList.getId(), result.getId());
-        assertEquals(testUser.getUserName(), result.getUserName());
+        assertEquals(testUser.getUsername(), result.getUsername());
         assertEquals(testBook.getId(), result.getBook().getId());
         assertEquals(Status.READING, result.getStatus());
         assertEquals(4, result.getRating());
@@ -185,7 +185,7 @@ public class ReadingListServiceTest {
         secondBook = bookRepository.save(secondBook);
 
         ReadingListRequestDTO secondRequestDTO = new ReadingListRequestDTO();
-        secondRequestDTO.setUserName(testUser.getUserName());
+        secondRequestDTO.setUsername(testUser.getUsername());
         secondRequestDTO.setBookID(secondBook.getId());
         secondRequestDTO.setStatus(Status.PLAN_TO_READ);
         secondRequestDTO.setRating(null);
@@ -210,13 +210,13 @@ public class ReadingListServiceTest {
         secondBook = bookRepository.save(secondBook);
 
         ReadingListRequestDTO secondRequestDTO = new ReadingListRequestDTO();
-        secondRequestDTO.setUserName(testUser.getUserName());
+        secondRequestDTO.setUsername(testUser.getUsername());
         secondRequestDTO.setBookID(secondBook.getId());
         secondRequestDTO.setStatus(Status.PLAN_TO_READ);
         secondRequestDTO.setRating(null);
         readingListService.create(secondRequestDTO);
 
-        PageWrapper<ReadingListDTO> result = readingListService.getAllByUser(testUser.getUserName(), 0, 10);
+        PageWrapper<ReadingListDTO> result = readingListService.getAllByUser(testUser.getUsername(), 0, 10);
 
         assertNotNull(result);
         assertEquals(2, result.getTotalElements());

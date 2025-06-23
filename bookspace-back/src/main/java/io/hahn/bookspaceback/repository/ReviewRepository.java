@@ -11,5 +11,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     Page<Review> findAllByReadingList_Book_Id(Long readingListBookId, Pageable pageable);
 
-    Page<Review> findAllByReadingList_User_UserName(String readingListUserUserName, Pageable pageable);
+    Page<Review> findAllByReadingList_User_Username(String readingListUserUsername, Pageable pageable);
 }

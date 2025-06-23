@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @PutMapping("/{username}")
-    @PreAuthorize("#username == principal.user.userName or hasAuthority('ADMIN')")
+    @PreAuthorize("#username == principal.user.username or hasAuthority('ADMIN')")
     public ResponseEntity<UserDTO> update(@PathVariable String username, @Valid @RequestBody UserDTO userDTO) {
         UserDTO updatedContent = userService.update(username, userDTO);
         return ResponseEntity.ok(updatedContent);
@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{username}")
-    @PreAuthorize("#username == principal.user.userName or hasAuthority('ADMIN')")
+    @PreAuthorize("#username == principal.user.username or hasAuthority('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable String username) {
         userService.delete(username);
         return ResponseEntity.noContent().build();

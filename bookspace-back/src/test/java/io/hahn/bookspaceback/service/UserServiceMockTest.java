@@ -47,7 +47,7 @@ class UserServiceMockTest {
     void setUp() {
         userDTO = new UserDTO();
         userDTO.setId("test-id");
-        userDTO.setUserName("testuser");
+        userDTO.setUsername("testuser");
         userDTO.setEmail("test@example.com");
         userDTO.setPassword("password123");
         userDTO.setRole(Role.USER);
@@ -55,7 +55,7 @@ class UserServiceMockTest {
 
         mockUserEntity = new User();
         ReflectionTestUtils.setField(mockUserEntity, "id", "test-id");
-        ReflectionTestUtils.setField(mockUserEntity, "userName", "testuser");
+        ReflectionTestUtils.setField(mockUserEntity, "username", "testuser");
         ReflectionTestUtils.setField(mockUserEntity, "email", "test@example.com");
         ReflectionTestUtils.setField(mockUserEntity, "password", "password123");
         ReflectionTestUtils.setField(mockUserEntity, "role", Role.USER);
@@ -64,7 +64,7 @@ class UserServiceMockTest {
 
     @Test
     void create_ShouldReturnUserDTO_WhenUserIsCreatedSuccessfully() {
-        when(userRepository.findByUserName(userDTO.getUserName())).thenReturn(Optional.empty());
+        when(userRepository.findByUsername(userDTO.getUsername())).thenReturn(Optional.empty());
         when(userRepository.findByEmail(userDTO.getEmail())).thenReturn(Optional.empty());
         when(userRepository.save(any(User.class))).thenReturn(mockUserEntity);
         when(userMapper.toDTO(mockUserEntity)).thenReturn(userDTO);
@@ -75,7 +75,7 @@ class UserServiceMockTest {
 
         assertNotNull(result);
         assertEquals(userDTO.getId(), result.getId());
-        assertEquals(userDTO.getUserName(), result.getUserName());
+        assertEquals(userDTO.getUsername(), result.getUsername());
         assertEquals(userDTO.getEmail(), result.getEmail());
         assertEquals(userDTO.getPassword(), result.getPassword());
         assertEquals(userDTO.getRole(), result.getRole());
@@ -83,7 +83,7 @@ class UserServiceMockTest {
 
     @Test
     void create_ShouldThrowCustomException_WhenUsernameAlreadyExists() {
-        when(userRepository.findByUserName(userDTO.getUserName())).thenReturn(Optional.of(mockUserEntity));
+        when(userRepository.findByUsername(userDTO.getUsername())).thenReturn(Optional.of(mockUserEntity));
 
         CustomException exception = assertThrows(CustomException.class, () -> userService.create(userDTO));
 
@@ -92,7 +92,7 @@ class UserServiceMockTest {
 
     @Test
     void create_ShouldThrowCustomException_WhenEmailAlreadyExists() {
-        when(userRepository.findByUserName(userDTO.getUserName())).thenReturn(Optional.empty());
+        when(userRepository.findByUsername(userDTO.getUsername())).thenReturn(Optional.empty());
         when(userRepository.findByEmail(userDTO.getEmail())).thenReturn(Optional.of(mockUserEntity));
 
         CustomException exception = assertThrows(CustomException.class, () -> userService.create(userDTO));
@@ -102,7 +102,7 @@ class UserServiceMockTest {
 
     @Test
     void create_ShouldThrowCustomException_WhenExceptionOccurs() {
-        when(userRepository.findByUserName(userDTO.getUserName())).thenReturn(Optional.empty());
+        when(userRepository.findByUsername(userDTO.getUsername())).thenReturn(Optional.empty());
         when(userRepository.findByEmail(userDTO.getEmail())).thenReturn(Optional.empty());
         when(userRepository.save(any(User.class))).thenThrow(new RuntimeException("Database error"));
         when(userMapper.toEntity(userDTO)).thenReturn(mockUserEntity);
@@ -126,7 +126,7 @@ class UserServiceMockTest {
 
         assertNotNull(result);
         assertEquals(userDTO.getId(), result.getId());
-        assertEquals(userDTO.getUserName(), result.getUserName());
+        assertEquals(userDTO.getUsername(), result.getUsername());
         assertEquals(userDTO.getEmail(), result.getEmail());
         assertEquals(userDTO.getPassword(), result.getPassword());
         assertEquals(userDTO.getRole(), result.getRole());
@@ -159,7 +159,7 @@ class UserServiceMockTest {
 
         assertNotNull(result);
         assertEquals(userDTO.getId(), result.getId());
-        assertEquals(userDTO.getUserName(), result.getUserName());
+        assertEquals(userDTO.getUsername(), result.getUsername());
         assertEquals(userDTO.getEmail(), result.getEmail());
         assertEquals(userDTO.getPassword(), result.getPassword());
         assertEquals(userDTO.getRole(), result.getRole());
@@ -234,19 +234,19 @@ class UserServiceMockTest {
 
     @Test
     void delete_ShouldDeleteUser_WhenUserExists() {
-        doNothing().when(userRepository).deleteByUserName(userDTO.getUserName());
+        doNothing().when(userRepository).deleteByUsername(userDTO.getUsername());
 
-        userService.delete(userDTO.getUserName());
+        userService.delete(userDTO.getUsername());
 
-        verify(userRepository, times(1)).deleteByUserName(userDTO.getUserName());
+        verify(userRepository, times(1)).deleteByUsername(userDTO.getUsername());
     }
 
     @Test
     void delete_ShouldThrowCustomException_WhenExceptionOccurs() {
-        doThrow(new RuntimeException("Database error")).when(userRepository).deleteByUserName(userDTO.getUserName());
+        doThrow(new RuntimeException("Database error")).when(userRepository).deleteByUsername(userDTO.getUsername());
 
-        CustomException exception = assertThrows(CustomException.class, () -> userService.delete(userDTO.getUserName()));
+        CustomException exception = assertThrows(CustomException.class, () -> userService.delete(userDTO.getUsername()));
 
-        assertEquals("Failed to delete user with username " + userDTO.getUserName() + " : java.lang.RuntimeException: Database error", exception.getMessage());
+        assertEquals("Failed to delete user with username " + userDTO.getUsername() + " : java.lang.RuntimeException: Database error", exception.getMessage());
     }
 }
