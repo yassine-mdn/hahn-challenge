@@ -1,0 +1,103 @@
+import {Menu, Search} from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {Sheet, SheetContent, SheetTrigger,} from "@/components/ui/sheet";
+import {Link} from "react-router";
+import {useState} from "react";
+import {Input} from "@/components/ui/input.tsx";
+
+interface MenuItem {
+    name: string;
+    link: string;
+    icon?: React.ReactNode;
+}
+
+const Navbar = () => {
+
+    const [isOpen, setIsOpen] = useState(false)
+
+    const navigationItems: MenuItem[] = [
+        { name: "Home", link: "/" },
+        { name: "My Books", link: "/my-books" },
+        { name: "Browse", link: "/browse" },
+    ]
+
+    return (
+        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className=" flex h-16 items-center justify-between px-4">
+                <div className="flex items-center gap-8 justify-between">
+                    <Link to="/" className="flex items-center space-x-2">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 16 16"
+                            className="w-6 h-6"
+                            fill="none"
+                        >
+                            <g clipPath="url(#a)" >
+                                <path
+                                    fill="white"
+                                    fillRule="evenodd"
+                                    d="M8 1.333H2v8.889h6v4.445h6V5.778H8z"
+                                    clipRule="evenodd"
+                                />
+                            </g>
+                            <defs>
+                                <clipPath id="a">
+                                    <path fill="white" d="M0 0h16v16H0z" />
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        <span className={"text-2xl font-bold hidden md:block"}>BookSpace</span>
+                    </Link>
+
+                    <nav className="hidden md:flex items-center space-x-6">
+                        {navigationItems.map((item) => (
+                            <Link key={item.name} to={item.link} className="text-sm font-medium transition-colors hover:text-primary">
+                                {item.name}
+                            </Link>
+                        ))}
+                    </nav>
+                </div>
+
+                <div className="flex items-center justify-center gap-6">
+                    <div className="relative">
+                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <Input type="search" placeholder="Search books..." className="pl-8 w-[300px] lg:w-[400px] border-0" />
+                    </div>
+                    <Button className={"hidden md:block"}>Login</Button>
+                </div>
+
+                <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                    <SheetTrigger asChild>
+                        <Button variant="ghost" size="icon" className="md:hidden">
+                            <Menu className="!h-8 !w-8"/>
+                            <span className="sr-only">Toggle menu</span>
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                        <div className="flex flex-col space-y-4 my-12 px-6 h-full">
+                            <nav className="flex flex-col space-y-2">
+                                {navigationItems.map((item) => (
+                                    <Link
+                                        key={item.name}
+                                        to={item.link}
+                                        className="block px-2 py-1 text-lg font-medium transition-colors hover:text-primary"
+                                        onClick={() => setIsOpen(false)}
+                                    >
+                                        {item.name}
+                                    </Link>
+                                ))}
+                            </nav>
+
+                            <Button className="mt-auto" onClick={() => setIsOpen(false)}>
+                                Login
+                            </Button>
+                        </div>
+                    </SheetContent>
+                </Sheet>
+            </div>
+        </header>
+    );
+};
+
+
+export {Navbar};
