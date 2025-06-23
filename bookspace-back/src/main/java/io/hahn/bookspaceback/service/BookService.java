@@ -5,6 +5,7 @@ import io.hahn.bookspaceback.entity.Book;
 import io.hahn.bookspaceback.exception.CustomException;
 import io.hahn.bookspaceback.mapper.BookMapper;
 import io.hahn.bookspaceback.repository.BookRepository;
+import io.hahn.bookspaceback.specification.BookSpec;
 import io.hahn.bookspaceback.util.PageWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,6 +84,18 @@ public class BookService {
         }
         try {
             return new PageWrapper<>(bookRepository.findAll(PageRequest.of(pageNumber, pageSize)).map(bookMapper::toDTO));
+        } catch (Exception ex) {
+            log.error("Error fetching all books : {}", ex.getMessage());
+            throw new CustomException("Failed to fetch all books : " + ex);
+        }
+    }
+
+    public PageWrapper<BookDTO> getAll(String search ,int pageNumber, int pageSize) {
+        if (pageNumber < 0 || pageSize <= 0) {
+            throw new CustomException("Invalid pagination parameters");
+        }
+        try {
+            return new PageWrapper<>(bookRepository.findAll(BookSpec.search(search),PageRequest.of(pageNumber, pageSize)).map(bookMapper::toDTO));
         } catch (Exception ex) {
             log.error("Error fetching all books : {}", ex.getMessage());
             throw new CustomException("Failed to fetch all books : " + ex);

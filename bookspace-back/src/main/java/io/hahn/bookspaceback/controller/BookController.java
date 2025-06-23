@@ -41,10 +41,11 @@ public class BookController {
 
     @GetMapping
     public ResponseEntity<PageWrapper<BookDTO>> getAll(
+            @RequestParam(name = "search", required = false) String search,
             @RequestParam(name = "page", required = false, defaultValue = "0") Integer pageNumber,
             @RequestParam(name = "size", required = false, defaultValue = "10") Integer pageSize
-            ) {
-        PageWrapper<BookDTO> contentList = bookService.getAll(pageNumber, pageSize);
+    ) {
+        PageWrapper<BookDTO> contentList = bookService.getAll(search,pageNumber, pageSize);
         return ResponseEntity.ok(contentList);
     }
 
