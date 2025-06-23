@@ -14,7 +14,6 @@ import io.hahn.bookspaceback.util.PageWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -22,14 +21,46 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
-    
+
     private final ReviewRepository reviewRepository;
     private final ReadingListRepository readingListRepository;
     private final ReviewRequestMapper reviewRequestMapper;
     private final ReviewMapper reviewMapper;
-    
+
+    // new version of create with auth check
+    public ReviewDTO secureCreate(String authenticatedUsername, ReviewRequestDTO reviewRequestDTO) {
+        try {
+            if (reviewRepository.existsByReadingList_Id(reviewRequestDTO.getReadingListId())) {
+                log.error("Review already exists for ReadingList id {}", reviewRequestDTO.getReadingListId());
+                throw new CustomException("Review already exists for ReadingList id " + reviewRequestDTO.getReadingListId());
+            }
+            ReadingList readingList = readingListRepository.findById(reviewRequestDTO.getReadingListId()).orElseThrow(() -> {
+                log.error("ReadingList with id {} not found", reviewRequestDTO.getReadingListId());
+                return new CustomException("ReadingList with id " + reviewRequestDTO.getReadingListId() + " not found", HttpStatus.NOT_FOUND);
+            });
+            if (!readingList.getUser().getUserName().equals(authenticatedUsername)) {
+                log.error("User does not have access to reading list {}", reviewRequestDTO.getReadingListId());
+                throw new CustomException("User does not have access to reading list", HttpStatus.FORBIDDEN);
+            }
+            if (readingList.getStatus() == Status.PLAN_TO_READ || readingList.getStatus() == Status.ON_HOLD) {
+                log.error("Cannot add review: ReadingList status is {}", readingList.getStatus());
+                throw new CustomException("Cannot add review for ReadingList with status " + readingList.getStatus(), HttpStatus.BAD_REQUEST);
+            }
+            Review saved = reviewRequestMapper.toEntity(reviewRequestDTO);
+            saved.setReadingList(readingList);
+            saved = reviewRepository.save(saved);
+            return reviewMapper.toDTO(saved);
+        } catch (CustomException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            log.error("Error creating review : {}", ex.getMessage(), ex);
+            throw new CustomException("Failed to add review : " + ex);
+        }
+    }
+
+    // Deprecated (Kept for tests (took too much time to write 😭😭😭))
     public ReviewDTO create(ReviewRequestDTO reviewRequestDTO) {
-        try{
+        try {
             if (reviewRepository.existsByReadingList_Id(reviewRequestDTO.getReadingListId())) {
                 log.error("Review already exists for ReadingList id {}", reviewRequestDTO.getReadingListId());
                 throw new CustomException("Review already exists for ReadingList id " + reviewRequestDTO.getReadingListId());
@@ -41,9 +72,10 @@ public class ReviewService {
             if (readingList.getStatus() == Status.PLAN_TO_READ || readingList.getStatus() == Status.ON_HOLD) {
                 log.error("Cannot add review: ReadingList status is {}", readingList.getStatus());
                 throw new CustomException("Cannot add review for ReadingList with status " + readingList.getStatus(), HttpStatus.BAD_REQUEST);
-            }            Review saved = reviewRequestMapper.toEntity(reviewRequestDTO);
+            }
+            Review saved = reviewRequestMapper.toEntity(reviewRequestDTO);
             saved.setReadingList(readingList);
-            saved =  reviewRepository.save(saved);
+            saved = reviewRepository.save(saved);
             return reviewMapper.toDTO(saved);
         } catch (CustomException ex) {
             throw ex;
@@ -58,7 +90,7 @@ public class ReviewService {
             throw new CustomException("Invalid pagination parameters");
         }
         try {
-            return new PageWrapper<>(reviewRepository.findAllByReadingList_Book_Id(bookId,PageRequest.of(pageNumber, pageSize)).map(reviewMapper::toDTO));
+            return new PageWrapper<>(reviewRepository.findAllByReadingList_Book_Id(bookId, PageRequest.of(pageNumber, pageSize)).map(reviewMapper::toDTO));
         } catch (Exception ex) {
             log.error("Error fetching reviews for bookId {}: {}", bookId, ex.getMessage());
             throw new CustomException("Failed to fetch reviews for bookId " + bookId + " : " + ex);
@@ -70,7 +102,7 @@ public class ReviewService {
             throw new CustomException("Invalid pagination parameters");
         }
         try {
-            return new PageWrapper<>(reviewRepository.findAllByReadingList_User_UserName(username,PageRequest.of(pageNumber, pageSize)).map(reviewMapper::toDTO));
+            return new PageWrapper<>(reviewRepository.findAllByReadingList_User_UserName(username, PageRequest.of(pageNumber, pageSize)).map(reviewMapper::toDTO));
         } catch (Exception ex) {
             log.error("Error fetching reviews for username {} : {}", username, ex.getMessage());
             throw new CustomException("Failed to fetch reviews for username " + username + " : " + ex);
