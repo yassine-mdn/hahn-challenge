@@ -14,6 +14,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -58,7 +60,7 @@ public class BookService {
             throw ex;
         } catch (Exception ex) {
             log.error("Error updating book with id {} : {}", id, ex.getMessage(), ex);
-            throw new CustomException("Failed to update book with id " + id +" : "+ ex);
+            throw new CustomException("Failed to update book with id " + id + " : " + ex);
         }
     }
 
@@ -74,7 +76,7 @@ public class BookService {
             throw ex;
         } catch (Exception ex) {
             log.error("Error fetching book with id {}: {}", id, ex.getMessage(), ex);
-            throw new CustomException("Failed to fetch book with id " + id +" : "+ ex);
+            throw new CustomException("Failed to fetch book with id " + id + " : " + ex);
         }
     }
 
@@ -90,24 +92,68 @@ public class BookService {
         }
     }
 
-    public PageWrapper<BookDTO> getAll(String search ,int pageNumber, int pageSize) {
+    public PageWrapper<BookDTO> getAll(String search, int pageNumber, int pageSize) {
         if (pageNumber < 0 || pageSize <= 0) {
             throw new CustomException("Invalid pagination parameters");
         }
         try {
-            return new PageWrapper<>(bookRepository.findAll(BookSpec.search(search),PageRequest.of(pageNumber, pageSize)).map(bookMapper::toDTO));
+            return new PageWrapper<>(bookRepository.findAll(BookSpec.search(search), PageRequest.of(pageNumber, pageSize)).map(bookMapper::toDTO));
         } catch (Exception ex) {
             log.error("Error fetching all books : {}", ex.getMessage());
             throw new CustomException("Failed to fetch all books : " + ex);
         }
     }
 
+    public PageWrapper<BookDTO> getPopular(int pageNumber, int pageSize) {
+        if (pageNumber < 0 || pageSize <= 0) {
+            throw new CustomException("Invalid pagination parameters");
+        }
+        try {
+            // could be dynamic as a param (1D, 1W, 1M, 1Y)
+            LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(1);
+            return new PageWrapper<>(bookRepository.findAllByPopularity(oneDayAgo, PageRequest.of(pageNumber, pageSize)).map(bookMapper::toDTO));
+        } catch (Exception ex) {
+            log.error("Error fetching popular books : {}", ex.getMessage());
+            throw new CustomException("Failed to fetch popular books : " + ex);
+        }
+    }
+
+    public PageWrapper<BookDTO> getFeatured(int pageNumber, int pageSize) {
+        if (pageNumber < 0 || pageSize <= 0) {
+            throw new CustomException("Invalid pagination parameters");
+        }
+        try {
+            return new PageWrapper<>(bookRepository.findAllByIsFeaturedTrue(PageRequest.of(pageNumber, pageSize)).map(bookMapper::toDTO));
+        } catch (Exception ex) {
+            log.error("Error fetching featured books : {}", ex.getMessage());
+            throw new CustomException("Failed to fetch featured books : " + ex);
+        }
+    }
+
+    public PageWrapper<BookDTO> getSimilar(Long referenceBookId, int pageNumber, int pageSize) {
+        if (pageNumber < 0 || pageSize <= 0) {
+            throw new CustomException("Invalid pagination parameters");
+        }
+        try {
+            BookDTO referenceBook = getById(referenceBookId);
+            return new PageWrapper<>(bookRepository.findSimilarBooks(
+                            referenceBookId,
+                            referenceBook.getAuthor(),
+                            referenceBook.getGenres(),
+                            PageRequest.of(pageNumber, pageSize)
+                    ).map(bookMapper::toDTO));
+        } catch (Exception ex) {
+            log.error("Error fetching similar books : {}", ex.getMessage());
+            throw new CustomException("Failed to fetch similar books : " + ex);
+        }
+    }
+
     public void delete(Long id) {
-        try{
+        try {
             bookRepository.deleteById(id);
         } catch (Exception ex) {
             log.error("Error deleting book with id {} : {}", id, ex.getMessage());
-            throw new CustomException("Failed to delete book with id " + id +" : "+ ex);
+            throw new CustomException("Failed to delete book with id " + id + " : " + ex);
         }
     }
 
