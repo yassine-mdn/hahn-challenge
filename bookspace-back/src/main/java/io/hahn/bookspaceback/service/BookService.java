@@ -1,6 +1,7 @@
 package io.hahn.bookspaceback.service;
 
 import io.hahn.bookspaceback.dto.BookDTO;
+import io.hahn.bookspaceback.dto.RatingCountDTO;
 import io.hahn.bookspaceback.entity.Book;
 import io.hahn.bookspaceback.exception.CustomException;
 import io.hahn.bookspaceback.mapper.BookMapper;
@@ -15,6 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -145,6 +150,24 @@ public class BookService {
         } catch (Exception ex) {
             log.error("Error fetching similar books : {}", ex.getMessage());
             throw new CustomException("Failed to fetch similar books : " + ex);
+        }
+    }
+
+    public List<RatingCountDTO> getRatingCountById(Long id) {
+        try {
+            List<RatingCountDTO> counts = bookRepository.findRatingCountByBookId(id);
+
+            Map<Integer, Long> map = counts.stream()
+                    .collect(Collectors.toMap(RatingCountDTO::getRating, RatingCountDTO::getCount));
+
+            List<RatingCountDTO> complete = new ArrayList<>();
+            for (int rating = 1; rating <= 5; rating++) {
+                complete.add(new RatingCountDTO(rating, map.getOrDefault(rating, 0L)));
+            }
+            return complete;
+        } catch (Exception ex) {
+            log.error("Error fetching rating count for book with id {}: {}", id, ex.getMessage());
+            throw new CustomException("Failed to fetch rating count for book with id " + id + " : " + ex);
         }
     }
 

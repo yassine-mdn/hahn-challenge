@@ -1,5 +1,6 @@
 package io.hahn.bookspaceback.repository;
 
+import io.hahn.bookspaceback.dto.RatingCountDTO;
 import io.hahn.bookspaceback.entity.Book;
 import io.hahn.bookspaceback.entity.enums.Genre;
 import org.springframework.data.domain.Page;
@@ -44,5 +45,15 @@ public interface BookRepository extends JpaRepository<Book,Long>, JpaSpecificati
         ORDER BY AVG(rl.rating) DESC, COUNT(rl.id) DESC
     """)
     Page<Book> findAllByPopularity(@Param("cutoffDate") LocalDateTime cutoffDate, Pageable pageable);
+
+
+    @Query("""
+        SELECT new io.hahn.bookspaceback.dto.RatingCountDTO(rl.rating, COUNT(rl.rating))
+            FROM ReadingList rl
+            WHERE rl.book.id = :bookId AND rl.rating IS NOT NULL
+            GROUP BY rl.rating
+            ORDER BY rl.rating ASC
+    """)
+    List<RatingCountDTO> findRatingCountByBookId(Long bookId);
 
 }
