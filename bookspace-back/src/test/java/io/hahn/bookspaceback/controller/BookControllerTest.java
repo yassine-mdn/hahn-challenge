@@ -1,7 +1,6 @@
 package io.hahn.bookspaceback.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.hahn.bookspaceback.dto.BookDTO;
 import io.hahn.bookspaceback.entity.enums.Genre;
 import io.hahn.bookspaceback.exception.CustomException;
@@ -14,20 +13,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -187,7 +182,7 @@ class BookControllerTest {
     void getAll_ShouldReturnPageOfBookDTOs_WhenSuccess() throws Exception {
         PageWrapper<BookDTO> bookPage = new PageWrapper<>(List.of(mockBookDTO));
 
-        when(bookService.getAll(0, 10)).thenReturn(bookPage);
+        when(bookService.getAll(null,0, 10)).thenReturn(bookPage);
 
         mockMvc.perform(get("/api/v1/books?page=0&size=10"))
                 .andDo(print())
@@ -207,7 +202,7 @@ class BookControllerTest {
     void getAll_ShouldReturnEmptyPage_WhenNoBooks() throws Exception {
         PageWrapper<BookDTO> emptyPage = new PageWrapper<>(List.of());
 
-        when(bookService.getAll(0, 10)).thenReturn(emptyPage);
+        when(bookService.getAll(null,0, 10)).thenReturn(emptyPage);
 
         mockMvc.perform(get("/api/v1/books?page=0&size=10"))
                 .andExpect(status().isOk())
@@ -216,7 +211,7 @@ class BookControllerTest {
 
     @Test
     void getAll_ShouldReturnBadRequest_WhenErrorOccurs() throws Exception {
-        when(bookService.getAll(0, 10)).thenThrow(new CustomException("Error occurred"));
+        when(bookService.getAll(null,0, 10)).thenThrow(new CustomException("Error occurred"));
 
         mockMvc.perform(get("/api/v1/books"))
                 .andExpect(status().isBadRequest());

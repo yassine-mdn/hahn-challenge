@@ -2,6 +2,7 @@ package io.hahn.bookspaceback.controller;
 
 
 import io.hahn.bookspaceback.dto.BookDTO;
+import io.hahn.bookspaceback.dto.RatingCountDTO;
 import io.hahn.bookspaceback.service.BookService;
 import io.hahn.bookspaceback.util.PageWrapper;
 import lombok.AllArgsConstructor;
@@ -75,6 +76,12 @@ public class BookController {
     ) {
         PageWrapper<BookDTO> bookList = bookService.getSimilar(id, pageNumber, pageSize);
         return ResponseEntity.ok(bookList);
+    }
+
+    @GetMapping("/{id}/ratings")
+    public ResponseEntity<List<RatingCountDTO>> getAllRatings(@PathVariable Long id){
+        List<RatingCountDTO> ratings = bookService.getRatingCountById(id);
+        return ResponseEntity.ok(ratings);
     }
 
     @DeleteMapping("/{id}")
