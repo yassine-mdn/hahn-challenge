@@ -140,7 +140,7 @@ class BookControllerTest {
 
     @Test
     void update_ShouldReturnBadRequest_InvalidJson() throws Exception {
-        Long id = 1L;
+        long id = 1L;
         String invalidJson = "{invalid json}";
 
         mockMvc.perform(put("/api/v1/books/" + id)
@@ -151,7 +151,7 @@ class BookControllerTest {
 
     @Test
     void getById_ShouldReturnBookDTO_WhenSuccess() throws Exception {
-        Long id = 1L;
+        long id = 1L;
 
         when(bookService.getById(id)).thenReturn(mockBookDTO);
 
