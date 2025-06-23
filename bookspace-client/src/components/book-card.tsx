@@ -4,12 +4,12 @@ import {Link} from "react-router";
 
 const BookCard = (props: BookDTO) => {
     return (
-        <Link className={"flex flex-col gap-3 w-fit"} to={`/book/${props.id}`} onClick={() => console.log(props.id)}>
+        <Link className={"flex flex-col gap-3 w-full"} to={`/book/${props.id}`} onClick={() => console.log(props.id)}>
             <div className="overflow-hidden rounded-md">
                 <img
                     src={props.coverUrl}
                     alt={props.title}
-                    className={"h-auto object-cover transition-all hover:scale-105 portrait w-[250px]"}
+                    className={"h-auto w-full object-cover transition-all hover:scale-105 aspect-5/8"}
                 />
             </div>
 

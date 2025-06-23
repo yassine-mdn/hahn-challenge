@@ -25,7 +25,7 @@ const sampleBooks: BookDTO[] = [
     },
     {
         id: 3,
-        title: "A Brief History of Timeee eeeeeeeeeeeeeee eeeeeeeee",
+        title: "A Brief History of Time",
         author: "Stephen Hawking",
         publisher: "Bantam Dell Publishing Group",
         genres: [BookDTOGenresEnum.SCIENCE, BookDTOGenresEnum.NONFICTION],
@@ -109,7 +109,7 @@ const sampleBooks: BookDTO[] = [
 
 const Home = () => {
     return (
-        <div>
+        <section id={"home"} className={"overflow-x-clip"}>
             <div className="flex items-center justify-between my-6">
                 <div className="space-y-1">
                     <h2 className="text-2xl font-semibold tracking-tight">
@@ -120,7 +120,7 @@ const Home = () => {
                     </p>
                 </div>
             </div>
-            <div className="grid place-items-center grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4 pb-4 mx-auto">
+            <div className="grid place-items-center grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 pb-4 mx-auto max-w-full overflow-x-hidden">
                 {sampleBooks.map((book) => (
                     <BookCard
                         id={book.id}
@@ -141,7 +141,7 @@ const Home = () => {
                     A collection of books handpicked by our contributors.
                 </p>
             </div>
-            <div className="grid place-items-center grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4 pb-4 mx-auto">
+            <div className="grid place-items-center grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 pb-4 mx-auto overflow-x-hidden">
                 {sampleBooks.map((book) => (
                     <BookCard
                         id={book.id}
@@ -154,7 +154,7 @@ const Home = () => {
                     />
                 ))}
             </div>
-        </div>
+        </section>
     );
 };
 
