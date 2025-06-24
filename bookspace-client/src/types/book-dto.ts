@@ -81,8 +81,8 @@ export enum BookDTOGenresEnum {
     HORROR = 'HORROR',
     ROMANCE = 'ROMANCE',
     FANTASY = 'FANTASY',
-    SCIENCEFICTION = 'Science Fiction',
-    DYSTOPIAN = 'Dystopian',
+    SCIENCEFICTION = 'SCIENCE_FICTION',
+    DYSTOPIAN = 'DYSTOPIAN',
     HISTORICALFICTION = 'HISTORICAL_FICTION',
     BIOGRAPHY = 'BIOGRAPHY',
     AUTOBIOGRAPHY = 'AUTOBIOGRAPHY',
@@ -106,5 +106,44 @@ export enum BookDTOGenresEnum {
     CRIME = 'CRIME',
     PHILOSOPHY = 'PHILOSOPHY',
     EDUCATIONAL = 'EDUCATIONAL'
+}
+
+export const BookGenreLabels: Record<BookDTOGenresEnum, string> = {
+    [BookDTOGenresEnum.FICTION]: 'Fiction',
+    [BookDTOGenresEnum.NONFICTION]: 'Non-fiction',
+    [BookDTOGenresEnum.MYSTERY]: 'Mystery',
+    [BookDTOGenresEnum.THRILLER]: 'Thriller',
+    [BookDTOGenresEnum.HORROR]: 'Horror',
+    [BookDTOGenresEnum.ROMANCE]: 'Romance',
+    [BookDTOGenresEnum.FANTASY]: 'Fantasy',
+    [BookDTOGenresEnum.SCIENCEFICTION]: 'Science Fiction',
+    [BookDTOGenresEnum.DYSTOPIAN]: 'Dystopian',
+    [BookDTOGenresEnum.HISTORICALFICTION]: 'Historical Fiction',
+    [BookDTOGenresEnum.BIOGRAPHY]: 'Biography',
+    [BookDTOGenresEnum.AUTOBIOGRAPHY]: 'Autobiography',
+    [BookDTOGenresEnum.MEMOIR]: 'Memoir',
+    [BookDTOGenresEnum.SELFHELP]: 'Self-help',
+    [BookDTOGenresEnum.HEALTH]: 'Health',
+    [BookDTOGenresEnum.TRAVEL]: 'Travel',
+    [BookDTOGenresEnum.GUIDE]: 'Guide',
+    [BookDTOGenresEnum.RELIGION]: 'Religion',
+    [BookDTOGenresEnum.SCIENCE]: 'Science',
+    [BookDTOGenresEnum.HISTORY]: 'History',
+    [BookDTOGenresEnum.POETRY]: 'Poetry',
+    [BookDTOGenresEnum.ART]: 'Art',
+    [BookDTOGenresEnum.COOKBOOK]: 'Cookbook',
+    [BookDTOGenresEnum.CHILDREN]: "Children's", 
+    [BookDTOGenresEnum.YOUNGADULT]: 'Young Adult',
+    [BookDTOGenresEnum.CLASSIC]: 'Classic',
+    [BookDTOGenresEnum.COMIC]: 'Comic',
+    [BookDTOGenresEnum.GRAPHICNOVEL]: 'Graphic Novel',
+    [BookDTOGenresEnum.ANTHOLOGY]: 'Anthology',
+    [BookDTOGenresEnum.CRIME]: 'Crime',
+    [BookDTOGenresEnum.PHILOSOPHY]: 'Philosophy',
+    [BookDTOGenresEnum.EDUCATIONAL]: 'Educational',
+};
+
+export function getBookGenreLabel(genre: BookDTOGenresEnum): string {
+    return BookGenreLabels[genre] || genre;
 }
 
