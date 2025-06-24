@@ -24,11 +24,11 @@ export interface AuthenticationRequestDTO {
      * @type {string}
      * @memberof AuthenticationRequestDTO
      */
-    username?: string;
+    username: string;
 
     /**
      * @type {string}
      * @memberof AuthenticationRequestDTO
      */
-    password?: string;
+    password: string;
 }

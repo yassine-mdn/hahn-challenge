@@ -9,5 +9,6 @@ databaseChangeLog:
       file: db/changelog/update-user-changelog.yaml
   - include:
       file: db/changelog/review-changelog.yaml
-
+  - include:
+      file: db/changelog/populate-changelog.yaml
 
