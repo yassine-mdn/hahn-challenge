@@ -1,11 +1,15 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import {createContext, type ReactNode, useContext, useEffect, useState} from "react";
 import Cookies from "js-cookie";
-import { type AuthenticationResponseDTO, AuthenticationResponseDTORoleEnum } from "@/types/authentication-response-dto";
+import type {AuthenticationResponseDTORoleEnum} from "@/types/authentication-response-dto";
+import type {RegisterDTO} from "@/types/register-dto.ts";
+import * as authAPI from "@/services/auth.service"
+import type {AuthenticationRequestDTO} from "@/types/authentication-request-dto.ts";
+import {useNavigate} from "react-router";
 
 interface AuthContextType {
   user: string | null;
   role: AuthenticationResponseDTORoleEnum | null;
-  login: (auth: AuthenticationResponseDTO) => void;
+  login: (auth: AuthenticationRequestDTO) => void;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -17,6 +21,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [role, setRole] = useState<AuthenticationResponseDTORoleEnum | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedUser = Cookies.get("user");
@@ -31,18 +36,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const login = (auth: AuthenticationResponseDTO) => {
-    if (auth.username && auth.role && auth.accessToken && auth.refreshToken) {
-      setUser(auth.username);
-      setRole(auth.role);
-      setAccessToken(auth.accessToken);
-      setRefreshToken(auth.refreshToken);
-      Cookies.set("user", auth.username);
-      Cookies.set("role", auth.role);
-      Cookies.set("accessToken", auth.accessToken);
-      Cookies.set("refreshToken", auth.refreshToken);
-    }
+  const login = async (data: AuthenticationRequestDTO) => {
+    const res = await authAPI.login(data);
+      setUser(res.username);
+      setRole(res.role);
+      setAccessToken(res.accessToken);
+      setRefreshToken(res.refreshToken);
+      Cookies.set("user", res.username);
+      Cookies.set("role", res.role);
+      Cookies.set("accessToken", res.accessToken);
+      Cookies.set("refreshToken", res.refreshToken);
+      if (res.role == "ADMIN")
+        navigate("/admin");
+      else
+        navigate("/");
   };
+
+  const register = async(data: RegisterDTO) => {
+    const res = await authAPI.register(data);
+    Cookies.set("user", res.username);
+    Cookies.set("role", res.role);
+    Cookies.set("accessToken", res.accessToken);
+    Cookies.set("refreshToken", res.refreshToken);
+    navigate("/");
+  }
 
   const logout = () => {
     setUser(null);
@@ -53,6 +70,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     Cookies.remove("role");
     Cookies.remove("accessToken");
     Cookies.remove("refreshToken");
+    navigate("/");
   };
 
   const isAuthenticated = !!accessToken;

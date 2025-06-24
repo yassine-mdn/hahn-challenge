@@ -6,21 +6,30 @@ import BookDetails from "@/features/books/pages/BookDetails.tsx";
 import UserDetails from "@/features/users/pages/UserDetails";
 import UserSettings from "@/features/users/pages/UserSettings";
 import AdminLayout from "@/layouts/AdminLayout.tsx";
+import {AuthProvider} from "@/features/auth/AuthContext";
+import ProtectedRoute from "@/features/auth/ProtectedRoute";
+import Login from "@/features/auth/pages/Login.tsx";
 
 function App() {
-
     return (
-        <Routes>
-            <Route element={<BaseLayout/>}>
-                <Route index element={<Home />} />
-                <Route path={"my-books"} element={<BookDetails/>}/>
-                <Route path={"user/details"} element={<UserDetails/>}/>
-                <Route path={"user/settings"} element={<UserSettings/>}/>
-            </Route>
-            <Route path={"admin"} element={<AdminLayout/>}>
-                <Route index element={<div/>}/>
-            </Route>
-        </Routes>
+       <AuthProvider>
+           <Routes>
+               <Route element={<BaseLayout/>}>
+                   <Route index element={<Home />} />
+                   <Route path={"my-books"} element={<BookDetails/>}/>
+                   <Route path={"user/details"} element={<UserDetails/>}/>
+                   <Route path={"user/settings"} element={<UserSettings/>}/>
+               </Route>
+               <Route path={"admin"} element={
+                   <ProtectedRoute requiredRole={"ADMIN"}>
+                       <AdminLayout />
+                   </ProtectedRoute>
+               }>
+                   <Route index element={<div/>}/>
+               </Route>
+               <Route path={"/login"} element={<Login/>}/>
+           </Routes>
+       </AuthProvider>
     )
 }
 

@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import { useAuth } from "./AuthContext";
-import { AuthenticationResponseDTORoleEnum } from "@/types/authentication-response-dto";
+import type {AuthenticationResponseDTORoleEnum} from "@/types/authentication-response-dto";
 import { useNavigate } from "react-router";
 
 interface ProtectedRouteProps {
@@ -17,7 +17,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole 
       navigate("/login", { replace: true });
     }
 
-    if (requiredRole && role !== requiredRole) {
+    if (requiredRole && role != requiredRole) {
       navigate("/login", { replace: true });
     }
   }, [isAuthenticated, navigate, requiredRole, role]);

@@ -24,33 +24,31 @@ export interface AuthenticationResponseDTO {
      * @type {string}
      * @memberof AuthenticationResponseDTO
      */
-    username?: string;
+    username: string;
 
     /**
      * @type {string}
      * @memberof AuthenticationResponseDTO
      */
-    role?: AuthenticationResponseDTORoleEnum;
+    role: AuthenticationResponseDTORoleEnum;
 
     /**
      * @type {string}
      * @memberof AuthenticationResponseDTO
      */
-    accessToken?: string;
+    accessToken: string;
 
     /**
      * @type {string}
      * @memberof AuthenticationResponseDTO
      */
-    refreshToken?: string;
+    refreshToken: string;
 }
 
 /**
  * @export
  * @enum {string}
  */
-export enum AuthenticationResponseDTORoleEnum {
-    USER = 'USER',
-    ADMIN = 'ADMIN'
-}
+export type AuthenticationResponseDTORoleEnum = 'USER' | 'ADMIN';
+
 

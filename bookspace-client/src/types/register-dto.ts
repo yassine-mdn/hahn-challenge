@@ -24,17 +24,17 @@ export interface RegisterDTO {
      * @type {string}
      * @memberof RegisterDTO
      */
-    username?: string;
+    username: string;
 
     /**
      * @type {string}
      * @memberof RegisterDTO
      */
-    email?: string;
+    email: string;
 
     /**
      * @type {string}
      * @memberof RegisterDTO
      */
-    password?: string;
+    password: string;
 }
