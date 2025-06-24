@@ -1,11 +1,18 @@
-import {Menu, Search, ChevronsUpDown, LogOut} from "lucide-react";
+import {LogOut, Menu, Search} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import {Sheet, SheetContent, SheetTrigger,} from "@/components/ui/sheet";
 import {Link} from "react-router";
 import {useState} from "react";
 import {Input} from "@/components/ui/input.tsx";
-import {DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem} from "@/components/ui/dropdown-menu";
-import {Avatar, AvatarImage, AvatarFallback} from "@/components/ui/avatar";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {useAuth} from "@/features/auth/AuthContext";
 import {useMutation} from "@tanstack/react-query";
 import {toast} from "sonner";

@@ -1,6 +1,7 @@
 import {SidebarInset, SidebarProvider, SidebarTrigger} from "@/features/admin/components/sidebar.tsx";
 import {AppSidebar} from '@/features/admin/components/app-sidebar';
 import {Separator} from '@/components/ui/separator';
+import {Outlet} from "react-router";
 
 
 const AdminLayout = () => {
@@ -19,7 +20,7 @@ const AdminLayout = () => {
                     </div>
                 </header>
                 <div className="flex flex-1 flex-col mx-auto container  gap-4 p-4 pt-0">
-
+                    <Outlet/>
                 </div>
             </SidebarInset>
         </SidebarProvider>

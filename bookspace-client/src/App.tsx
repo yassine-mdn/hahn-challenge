@@ -10,6 +10,7 @@ import {AuthProvider} from "@/features/auth/AuthContext";
 import ProtectedRoute from "@/features/auth/ProtectedRoute";
 import Login from "@/features/auth/pages/Login.tsx";
 import SignUp from "@/features/auth/pages/sign-up.tsx";
+import BookTable from "@/features/admin/pages/books/book-table.tsx";
 
 function App() {
     return (
@@ -26,7 +27,7 @@ function App() {
                        <AdminLayout />
                    </ProtectedRoute>
                }>
-                   <Route index element={<div/>}/>
+                   <Route index element={<BookTable/>}/>
                </Route>
                <Route path={"/login"} element={<Login/>}/>
                <Route path={"/sign-up"} element={<SignUp/>}/>
