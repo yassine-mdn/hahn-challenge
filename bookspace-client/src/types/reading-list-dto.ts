@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { BookBarebonesDTO } from './book-barebones-dto';
+import { type BookBarebonesDTO } from './book-barebones-dto';
  /**
  * 
  *
