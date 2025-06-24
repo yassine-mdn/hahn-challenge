@@ -1,4 +1,4 @@
-import type {BookDTO} from "@/types";
+import type {BookDTO} from "@/types/book-dto";
 import {Link} from "react-router";
 
 
