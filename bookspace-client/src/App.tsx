@@ -9,6 +9,7 @@ import AdminLayout from "@/layouts/AdminLayout.tsx";
 import {AuthProvider} from "@/features/auth/AuthContext";
 import ProtectedRoute from "@/features/auth/ProtectedRoute";
 import Login from "@/features/auth/pages/Login.tsx";
+import SignUp from "@/features/auth/pages/sign-up.tsx";
 
 function App() {
     return (
@@ -28,6 +29,7 @@ function App() {
                    <Route index element={<div/>}/>
                </Route>
                <Route path={"/login"} element={<Login/>}/>
+               <Route path={"/sign-up"} element={<SignUp/>}/>
            </Routes>
        </AuthProvider>
     )

@@ -10,8 +10,10 @@ interface AuthContextType {
   user: string | null;
   role: AuthenticationResponseDTORoleEnum | null;
   login: (auth: AuthenticationRequestDTO) => void;
+  signup: (auth: RegisterDTO) => void;
   logout: () => void;
   isAuthenticated: boolean;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,6 +23,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [role, setRole] = useState<AuthenticationResponseDTORoleEnum | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,6 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setAccessToken(storedAccessToken);
       setRefreshToken(storedRefreshToken);
     }
+    setLoading(false);
   }, []);
 
   const login = async (data: AuthenticationRequestDTO) => {
@@ -52,7 +56,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         navigate("/");
   };
 
-  const register = async(data: RegisterDTO) => {
+  const signup = async(data: RegisterDTO) => {
     const res = await authAPI.register(data);
     Cookies.set("user", res.username);
     Cookies.set("role", res.role);
@@ -76,7 +80,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = !!accessToken;
 
   return (
-    <AuthContext.Provider value={{ user, role, login, logout, isAuthenticated }}>
+    <AuthContext.Provider value={{ user, role, login, signup, logout, isAuthenticated, loading }}>
       {children}
     </AuthContext.Provider>
   );

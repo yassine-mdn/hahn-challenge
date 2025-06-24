@@ -9,18 +9,22 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
-  const { isAuthenticated, role } = useAuth();
+  const { isAuthenticated, role, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (loading) return;
+
     if (!isAuthenticated) {
       navigate("/login", { replace: true });
-    }
-
-    if (requiredRole && role != requiredRole) {
+    } else if (requiredRole && role !== requiredRole) {
       navigate("/login", { replace: true });
     }
-  }, [isAuthenticated, navigate, requiredRole, role]);
+  }, [isAuthenticated, navigate, requiredRole, role, loading]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return <>{children}</>;
 };
