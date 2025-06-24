@@ -1,5 +1,5 @@
-import {Rating, RatingButton} from "@/components/ui/rating";
-import {Progress} from "@/components/ui/progress";
+import {Rating, RatingButton} from "@/components/ui/rating.tsx";
+import {Progress} from "@/components/ui/progress.tsx";
 import type {RatingCountDTO} from "@/types/rating-count-dto.ts";
 
 type Props = {

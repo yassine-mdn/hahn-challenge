@@ -1,14 +1,14 @@
-import {type BookDTO, BookDTOGenresEnum} from "@/types/book-dto";
+import {type BookDTO, BookDTOGenresEnum} from "@/types/book-dto.ts";
 import {Button} from "@/components/ui/button.tsx";
 import {Rating, RatingButton} from "@/components/ui/rating.tsx";
 import {Separator} from "@/components/ui/separator.tsx";
 import {Badge} from "@/components/ui/badge.tsx";
-import BookCard from "@/components/book-card.tsx";
+import BookCard from "@/features/books/components/book-card.tsx";
 import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area.tsx";
 import type {RatingCountDTO} from "@/types/rating-count-dto.ts";
-import RatingDistribution from "@/components/rating-distribution.tsx";
+import RatingDistribution from "@/features/books/components/rating-distribution.tsx";
 import type {ReviewDTO} from "@/types/review-dto.ts";
-import UserReviews from "@/components/user-reviews.tsx";
+import UserReviews from "@/features/books/components/user-reviews.tsx";
 
 const bookDetails: BookDTO = {
     id: 1,
@@ -180,7 +180,7 @@ const BookDetails = () => {
                         ))}
                     </Rating>
                 </div>
-                <div className="flex flex-col gap-4 flex-1 min-h-0 overflow-y-auto">
+                <div className="flex flex-col gap-4 flex-1 min-h-0 overflow-y-auto no-scrollbar">
                     <div className="flex-shrink-0">
                         <h3 className="text-3xl sm:text-4xl lg:text-6xl font-medium">{bookDetails.title}</h3>
                         <h3 className="text-xl sm:text-2xl mt-1 text-muted-foreground hover:underline">{bookDetails.author}</h3>

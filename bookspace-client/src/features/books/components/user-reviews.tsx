@@ -1,5 +1,5 @@
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
-import {Card, CardContent} from "@/components/ui/card"
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar.tsx"
+import {Card, CardContent} from "@/components/ui/card.tsx"
 import {Rating, RatingButton} from "@/components/ui/rating.tsx";
 import type {ReviewDTO} from "@/types/review-dto.ts";
 
