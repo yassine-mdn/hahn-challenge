@@ -1,8 +1,7 @@
 import {ChevronsUpDown, LogOut,} from "lucide-react"
-import { toast } from "sonner"
-import { useAuth } from "@/features/auth/AuthContext"
-import { useQuery, useMutation } from "@tanstack/react-query"
-import { getProfile } from "@/services/auth.service"
+import {toast} from "sonner"
+import {useAuth} from "@/features/auth/AuthContext"
+import {useMutation} from "@tanstack/react-query"
 
 import {Avatar, AvatarFallback, AvatarImage,} from "@/components/ui/avatar.tsx"
 import {

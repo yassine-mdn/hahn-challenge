@@ -1,9 +1,15 @@
-import {Menu, Search} from "lucide-react";
+import {Menu, Search, ChevronsUpDown, LogOut} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import {Sheet, SheetContent, SheetTrigger,} from "@/components/ui/sheet";
 import {Link} from "react-router";
 import {useState} from "react";
 import {Input} from "@/components/ui/input.tsx";
+import {DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem} from "@/components/ui/dropdown-menu";
+import {Avatar, AvatarImage, AvatarFallback} from "@/components/ui/avatar";
+import {useAuth} from "@/features/auth/AuthContext";
+import {useMutation} from "@tanstack/react-query";
+import {toast} from "sonner";
+import {useIsMobile} from "@/hooks/use-mobile";
 
 interface MenuItem {
     name: string;
@@ -14,6 +20,16 @@ interface MenuItem {
 const Navbar = () => {
 
     const [isOpen, setIsOpen] = useState(false)
+    const { user, logout, isAuthenticated } = useAuth();
+    const isMobile = useIsMobile();
+    const logoutMutation = useMutation({
+        mutationFn: async () => {
+            logout();
+        },
+        onSuccess: () => {
+            toast("Logged out successfully.");
+        },
+    });
 
     const navigationItems: MenuItem[] = [
         { name: "Home", link: "/" },
@@ -63,7 +79,39 @@ const Navbar = () => {
                         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input type="search" placeholder="Search books..." className="pl-8 w-[300px] lg:w-[400px] border-0" />
                     </div>
-                    <Button className={"hidden md:block"}>Login</Button>
+                    {isAuthenticated ? (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button size={"icon"} variant="ghost" className="hidden md:flex items-center gap-2 px-3">
+                                    <Avatar className="h-8 w-8 rounded-lg">
+                                        <AvatarImage src={`https://api.dicebear.com/9.x/lorelei-neutral/svg?seed=${user}`} alt={user || "User"} />
+                                        <AvatarFallback className="rounded-lg">{user?.[0]?.toUpperCase() || "U"}</AvatarFallback>
+                                    </Avatar>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent side={isMobile ? "bottom" : "right"} align="end" sideOffset={4} className="min-w-56 rounded-lg">
+                                <DropdownMenuLabel className="p-0 font-normal">
+                                    <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                                        <Avatar className="h-8 w-8 rounded-lg">
+                                            <AvatarImage src={`https://api.dicebear.com/9.x/lorelei-neutral/svg?seed=${user}`} alt={user || "User"} />
+                                            <AvatarFallback className="rounded-lg">{user?.[0]?.toUpperCase() || "U"}</AvatarFallback>
+                                        </Avatar>
+                                        <div className="grid flex-1 text-left text-sm leading-tight">
+                                            <span className="truncate font-medium">{user || "User"}</span>
+                                        </div>
+                                    </div>
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={() => logoutMutation.mutate()}>
+                                    <LogOut className="mr-2" /> Log out
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    ) : (
+                        <Button className={"hidden md:block"} asChild>
+                            <Link to="/login">Login</Link>
+                        </Button>
+                    )}
                 </div>
 
                 <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -88,8 +136,10 @@ const Navbar = () => {
                                 ))}
                             </nav>
 
-                            <Button className="mt-auto" onClick={() => setIsOpen(false)}>
-                                Login
+                            <Button className="mt-auto" asChild>
+                                <Link to="/login" onClick={() => setIsOpen(false)}>
+                                    Login
+                                </Link>
                             </Button>
                         </div>
                     </SheetContent>
