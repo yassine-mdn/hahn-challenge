@@ -2,6 +2,8 @@ import ProfileCard from "../components/profile-card";
 import {ReadingList} from "../components/reading-list";
 import {type UserDTO} from "@/types/user-dto";
 import {type ReadingListDTO, ReadingListDTOStatusEnum} from "@/types/reading-list-dto";
+import ReviewList from "@/features/users/components/review-list.tsx";
+import type {ReviewDTO} from "@/types/review-dto.ts";
 
 const user: UserDTO = {
     id: "1",
@@ -77,6 +79,47 @@ const user: UserDTO = {
   }
 ];
 
+const sampleReviews: ReviewDTO[] = [
+    {
+        id: 1,
+        username: "Sarah Johnson",
+        comment:
+            "Absolutely love this product! The quality is outstanding and it exceeded my expectations. The customer service was also fantastic. Highly recommend to anyone looking for a reliable solution.",
+        rating: 5,
+        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+        book: {
+            id: 105,
+            title: "Philosophy 101",
+            coverUrl: "https://cdn.hmv.com/r/w-1280/hmv/files/13/13e34619-840e-4bbc-9558-0d076baf3b9d.jpg"
+        }
+    },
+    {
+        id: 2,
+        username: "Mike Chen",
+        comment:
+            "Good value for money. Works as expected, though the setup could be a bit more intuitive. Overall satisfied with the purchase.",
+        rating: 4,
+        createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 1 week ago
+        book: {
+            id: 105,
+            title: "Philosophy 101",
+            coverUrl: "https://cdn.hmv.com/r/w-1280/hmv/files/13/13e34619-840e-4bbc-9558-0d076baf3b9d.jpg"
+        }
+    },
+    {
+        id: 3,
+        username: "Emily Rodriguez",
+        comment: "Perfect! Exactly what I was looking for. Fast shipping and great packaging too.",
+        rating: 5,
+        createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+        book: {
+            id: 105,
+            title: "Philosophy 101",
+            coverUrl: "https://cdn.hmv.com/r/w-1280/hmv/files/13/13e34619-840e-4bbc-9558-0d076baf3b9d.jpg"
+        }
+    },
+]
+
 const UserDetails = () => {
     return (
     
@@ -84,6 +127,7 @@ const UserDetails = () => {
           <ProfileCard user={user} />
           <div className="mt-8">
             <ReadingList readingList={sampleReadingList} />
+              <ReviewList reviews={sampleReviews}/>
           </div>
           
         </div>
