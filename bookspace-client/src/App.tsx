@@ -5,6 +5,7 @@ import Home from "@/features/home/pages/Home.tsx";
 import BookDetails from "@/features/books/pages/BookDetails.tsx";
 import UserDetails from "@/features/users/pages/UserDetails";
 import UserSettings from "@/features/users/pages/UserSettings";
+import AdminLayout from "@/layouts/AdminLayout.tsx";
 
 function App() {
 
@@ -15,6 +16,9 @@ function App() {
                 <Route path={"my-books"} element={<BookDetails/>}/>
                 <Route path={"user/details"} element={<UserDetails/>}/>
                 <Route path={"user/settings"} element={<UserSettings/>}/>
+            </Route>
+            <Route path={"admin"} element={<AdminLayout/>}>
+                <Route index element={<div/>}/>
             </Route>
         </Routes>
     )

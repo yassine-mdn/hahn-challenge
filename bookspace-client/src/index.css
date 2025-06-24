@@ -136,7 +136,6 @@
   --shadow-2xl: 0px 4px 8px -3px hsl(0 0% 0% / 0.35);
 }
 
-
 body {
   letter-spacing: var(--tracking-normal);
 }
