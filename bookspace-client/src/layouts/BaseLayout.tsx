@@ -6,7 +6,7 @@ const BaseLayout = () => {
     return (
         <div className={"pt-16 min-h-screen overflow-hidden flex flex-col"}>
             <Navbar/>
-            <div className={"w-full container mx-auto py-8 px-2 lg:px-0 overflow-x-hidden"}>
+            <div className={"w-full container mx-auto py-8 mb-8 px-2 lg:px-0 overflow-x-hidden"}>
                 <Outlet/>
             </div>
             <Footer/>
