@@ -1,4 +1,4 @@
-import {LogOut, Menu, Search} from "lucide-react";
+import {LogOut, Menu, Search, Settings2} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import {Sheet, SheetContent, SheetTrigger,} from "@/components/ui/sheet";
 import {Link} from "react-router";
@@ -108,6 +108,13 @@ const Navbar = () => {
                                         </div>
                                     </div>
                                 </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem asChild>
+                                    <Link to={`/user/${user}/settings`} className={"flex space-x-2"}>
+                                        <Settings2/>
+                                        Settings
+                                    </Link>
+                                </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem onClick={() => logoutMutation.mutate()}>
                                     <LogOut className="mr-2" /> Log out

@@ -12,6 +12,7 @@ interface AuthContextType {
   login: (auth: AuthenticationRequestDTO) => void;
   signup: (auth: RegisterDTO) => void;
   logout: () => void;
+  updateUser: (username: string) => void;
   isAuthenticated: boolean;
   loading: boolean;
 }
@@ -77,10 +78,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     navigate("/");
   };
 
+  const updateUser = (username: string) => {
+    setUser(username);
+    Cookies.set("user", username);
+  };
+
   const isAuthenticated = !!accessToken;
 
   return (
-    <AuthContext.Provider value={{ user, role, login, signup, logout, isAuthenticated, loading }}>
+    <AuthContext.Provider value={{ user, role, login, signup, logout, updateUser, isAuthenticated, loading }}>
       {children}
     </AuthContext.Provider>
   );

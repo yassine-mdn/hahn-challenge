@@ -14,25 +14,32 @@ import BookTable from "@/features/admin/pages/books/book-table.tsx";
 
 function App() {
     return (
-       <AuthProvider>
-           <Routes>
-               <Route element={<BaseLayout/>}>
-                   <Route index element={<Home />} />
-                   <Route path={"my-books"} element={<BookDetails/>}/>
-                   <Route path={"user/details"} element={<UserDetails/>}/>
-                   <Route path={"user/settings"} element={<UserSettings/>}/>
-               </Route>
-               <Route path={"admin"} element={
-                   <ProtectedRoute requiredRole={"ADMIN"}>
-                       <AdminLayout />
-                   </ProtectedRoute>
-               }>
-                   <Route index element={<BookTable/>}/>
-               </Route>
-               <Route path={"/login"} element={<Login/>}/>
-               <Route path={"/sign-up"} element={<SignUp/>}/>
-           </Routes>
-       </AuthProvider>
+        <AuthProvider>
+            <Routes>
+                <Route element={<BaseLayout/>}>
+                    <Route index element={<Home/>}/>
+                    <Route path={"book/:id"} element={<BookDetails/>}/>
+                    <Route path={"user"}>
+                        <Route path={":name"} element={<UserDetails/>}/>
+                        <Route path={":name/settings"} element={<ProtectedRoute>
+                            <UserSettings/>
+                        </ProtectedRoute>}>
+
+                        </Route>
+                    </Route>
+                </Route>
+
+                <Route path={"admin"} element={
+                    <ProtectedRoute requiredRole={"ADMIN"}>
+                        <AdminLayout/>
+                    </ProtectedRoute>
+                }>
+                    <Route index element={<BookTable/>}/>
+                </Route>
+                <Route path={"/login"} element={<Login/>}/>
+                <Route path={"/sign-up"} element={<SignUp/>}/>
+            </Routes>
+        </AuthProvider>
     )
 }
 
