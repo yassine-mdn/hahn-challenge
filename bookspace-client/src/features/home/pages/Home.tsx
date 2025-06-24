@@ -1,5 +1,5 @@
-import BookCard from "@/components/book-card.tsx";
-import {type BookDTO, BookDTOGenresEnum} from "@/types/book-dto";
+import BookCard from "@/features/books/components/book-card.tsx";
+import {type BookDTO, BookDTOGenresEnum} from "@/types/book-dto.ts";
 
 
 const sampleBooks: BookDTO[] = [
