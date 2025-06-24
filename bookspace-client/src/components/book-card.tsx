@@ -4,7 +4,7 @@ import {Link} from "react-router";
 
 const BookCard = (props: BookDTO) => {
     return (
-        <Link className={"flex flex-col gap-3 w-full"} to={`/book/${props.id}`} onClick={() => console.log(props.id)}>
+        <Link className={"flex flex-col gap-3 min-w-44 md:min-w-auto w-full"} to={`/book/${props.id}`} onClick={() => console.log(props.id)}>
             <div className="overflow-hidden rounded-md">
                 <img
                     src={props.coverUrl}

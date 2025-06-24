@@ -25,6 +25,7 @@ type RatingContextValue = {
     handleKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => void;
     setHoverValue: (value: number | null) => void;
     setFocusedStar: (value: number | null) => void;
+    allowPartialFill?: boolean;
 };
 
 const RatingContext = createContext<RatingContextValue | null>(null);
@@ -57,42 +58,90 @@ export const RatingButton = ({
         handleKeyDown,
         setHoverValue,
         setFocusedStar,
+        allowPartialFill,
     } = useRating();
 
     const index = providedIndex ?? 0;
-    const isActive = index < (hoverValue ?? focusedStar ?? value ?? 0);
-    let tabIndex = -1;
+    const currentValue = hoverValue ?? focusedStar ?? value ?? 0;
 
-    if (!readOnly) {
-        tabIndex = value === index + 1 ? 0 : -1;
+    // Calculate fill state
+    const starPosition = index + 1;
+    let fillState: 'empty' | 'partial' | 'full' = 'empty';
+    let fillPercentage = 0;
+
+    if (currentValue >= starPosition) {
+        fillState = 'full';
+        fillPercentage = 100;
+    } else if (currentValue > index && allowPartialFill) {
+        fillState = 'partial';
+        fillPercentage = (currentValue - index) * 100;
     }
+
+    let tabIndex = -1;
+    if (!readOnly) {
+        tabIndex = value === starPosition ? 0 : -1;
+    }
+
+    const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+        // Always handle clicks as full stars, regardless of allowPartialFill
+        handleValueChange(event, starPosition);
+    };
 
     return (
         <button
             type="button"
-            onClick={(event) => handleValueChange(event, index + 1)}
-            onMouseEnter={() => !readOnly && setHoverValue(index + 1)}
+            onClick={handleClick}
+            onMouseEnter={() => !readOnly && setHoverValue(starPosition)}
             onKeyDown={handleKeyDown}
-            onFocus={() => setFocusedStar(index + 1)}
+            onFocus={() => setFocusedStar(starPosition)}
             onBlur={() => setFocusedStar(null)}
             disabled={readOnly}
             className={cn(
                 'rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-                'p-0.5',
+                'p-0.5 relative',
                 readOnly && 'cursor-default',
                 className
             )}
             tabIndex={tabIndex}
         >
-            {cloneElement(icon, {
-                size,
-                className: cn(
-                    'transition-colors duration-200',
-                    isActive && 'fill-current',
-                    !readOnly && 'cursor-pointer'
-                ),
-                'aria-hidden': 'true',
-            })}
+            {allowPartialFill && fillState === 'partial' ? (
+                <div className="relative">
+                    {/* Background (empty) star */}
+                    {cloneElement(icon, {
+                        size,
+                        className: cn(
+                            'transition-colors duration-200',
+                            !readOnly && 'cursor-pointer'
+                        ),
+                        'aria-hidden': 'true',
+                    })}
+
+                    {/* Foreground (filled) star with clip mask */}
+                    <div
+                        className="absolute inset-0 overflow-hidden"
+                        style={{ clipPath: `inset(0 ${100 - fillPercentage}% 0 0)` }}
+                    >
+                        {cloneElement(icon, {
+                            size,
+                            className: cn(
+                                'transition-colors duration-200 fill-current',
+                                !readOnly && 'cursor-pointer'
+                            ),
+                            'aria-hidden': 'true',
+                        })}
+                    </div>
+                </div>
+            ) : (
+                cloneElement(icon, {
+                    size,
+                    className: cn(
+                        'transition-colors duration-200',
+                        fillState === 'full' && 'fill-current',
+                        !readOnly && 'cursor-pointer'
+                    ),
+                    'aria-hidden': 'true',
+                })
+            )}
         </button>
     );
 };
@@ -106,6 +155,7 @@ export type RatingProps = {
     ) => void;
     onValueChange?: (value: number) => void;
     readOnly?: boolean;
+    allowPartialFill?: boolean;
     className?: string;
     children?: ReactNode;
 };
@@ -116,6 +166,7 @@ export const Rating = ({
                            defaultValue,
                            onChange,
                            readOnly = false,
+                           allowPartialFill = false,
                            className,
                            children,
                            ...props
@@ -180,7 +231,8 @@ export const Rating = ({
     useEffect(() => {
         if (focusedStar !== null && containerRef.current) {
             const buttons = containerRef.current.querySelectorAll('button');
-            buttons[focusedStar - 1]?.focus();
+            const buttonIndex = Math.ceil(focusedStar) - 1;
+            buttons[buttonIndex]?.focus();
         }
     }, [focusedStar]);
 
@@ -193,6 +245,7 @@ export const Rating = ({
         handleKeyDown,
         setHoverValue,
         setFocusedStar,
+        allowPartialFill,
     };
 
     return (
