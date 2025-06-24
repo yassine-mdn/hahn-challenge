@@ -2,12 +2,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { type UserDTO } from "@/types/user-dto";
+import {useAuth} from "@/features/auth/AuthContext.tsx";
 
 type ProfileCardProps = {
     user: UserDTO
 }
 
 const ProfileCard = (props: ProfileCardProps) => {
+
+  const {user} = useAuth();
 
     const getInitials = (name: string) => {
         return name
@@ -32,10 +35,12 @@ const ProfileCard = (props: ProfileCardProps) => {
           <p className="text-muted-foreground mb-2">Avid reader and book reviewer</p>
           <p className="text-sm text-muted-foreground">Joined in {props.user.createdAt?.getFullYear()}</p>
         </div>
-        
-        <Button variant="outline" className="shrink-0">
-          Edit Profile
-        </Button>
+
+        {user == props.user.username && (
+            <Button variant="outline" className="shrink-0">
+              Edit Profile
+            </Button>
+        )}
       </div>
     </CardContent>
   </Card>

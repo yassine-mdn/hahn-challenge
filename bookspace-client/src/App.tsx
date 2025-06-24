@@ -11,6 +11,7 @@ import ProtectedRoute from "@/features/auth/ProtectedRoute";
 import Login from "@/features/auth/pages/Login.tsx";
 import SignUp from "@/features/auth/pages/sign-up.tsx";
 import BookTable from "@/features/admin/pages/books/book-table.tsx";
+import UserReadingList from "@/features/users/pages/UserReadingList.tsx";
 
 function App() {
     return (
@@ -20,7 +21,10 @@ function App() {
                     <Route index element={<Home/>}/>
                     <Route path={"book/:id"} element={<BookDetails/>}/>
                     <Route path={"user"}>
-                        <Route path={":name"} element={<UserDetails/>}/>
+                        <Route path={":name"}>
+                            <Route index element={<UserDetails/>}/>
+                            <Route path={"reading-list"} element={<UserReadingList/>}/>
+                        </Route>
                         <Route path={":name/settings"} element={<ProtectedRoute>
                             <UserSettings/>
                         </ProtectedRoute>}>
