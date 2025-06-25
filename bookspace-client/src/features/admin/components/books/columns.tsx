@@ -1,7 +1,9 @@
 import type {ColumnDef} from "@tanstack/react-table";
 import type {BookDTO} from "@/types/book-dto.ts";
-import { getBookGenreLabel } from "@/types/book-dto.ts";
+import {getBookGenreLabel} from "@/types/book-dto.ts";
 import {Badge} from "@/components/ui/badge.tsx";
+import {Checkbox} from "@/components/ui/checkbox.tsx";
+import { BookActions } from "./book-actions";
 
 export const columns: ColumnDef<BookDTO>[] = [
   {
@@ -48,12 +50,22 @@ export const columns: ColumnDef<BookDTO>[] = [
   {
     accessorKey: "isFeatured",
     header: "Featured",
-    cell: ({ row }) =>
-      row.original.isFeatured ? (
-        <Badge className={"bg-green-300"}>Yes</Badge>
-      ) : (
-        <Badge className={"bg-red-300"}  >No</Badge>
-      ),
+    cell: ({ row }) => (
+      <Checkbox 
+        checked={row.original.isFeatured}
+        className="pointer-events-none"
+      />
+    ),
     size: 80,
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const book = row.original
+
+      return (
+        <BookActions book={book} />
+      )
+    },
   },
 ];

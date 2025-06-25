@@ -1,5 +1,5 @@
 import './App.css'
-import {Route, Routes} from "react-router";
+import {Route, Routes, Navigate} from "react-router";
 import BaseLayout from "@/layouts/BaseLayout.tsx";
 import Home from "@/features/home/pages/Home.tsx";
 import BookDetails from "@/features/books/pages/BookDetails.tsx";
@@ -13,6 +13,7 @@ import Login from "@/features/auth/pages/Login.tsx";
 import SignUp from "@/features/auth/pages/sign-up.tsx";
 import BookTable from "@/features/admin/pages/books/book-table.tsx";
 import UserReadingList from "@/features/users/pages/UserReadingList.tsx";
+import UserTable from "@/features/admin/pages/users/user-table.tsx";
 
 function App() {
     return (
@@ -40,7 +41,9 @@ function App() {
                             <AdminLayout/>
                         </ProtectedRoute>
                     }>
-                        <Route index element={<BookTable/>}/>
+                        <Route index element={<Navigate to="books" replace />}/>
+                        <Route path={"books"} element={<BookTable/>}/>
+                        <Route path={"users"} element={<UserTable/>}/>
                     </Route>
                     <Route path={"/login"} element={<Login/>}/>
                     <Route path={"/sign-up"} element={<SignUp/>}/>

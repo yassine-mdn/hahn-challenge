@@ -1,12 +1,10 @@
-import {DataTable} from "@/components/ui/data-table.tsx";
-import {columns} from "@/features/admin/components/books/columns.tsx";
+import {DataTable} from "@/components/ui/data-table";
+import {columns} from "@/features/admin/components/users/columns";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {createBook, fetchAllBooks} from "@/services/book.service";
+import {createUser, fetchAllUsers} from "@/services/user.service";
 import {useSearchParams} from "react-router";
-import {useEffect, useState} from "react";
-import {Button} from "@/components/ui/button.tsx";
-import {Input} from "@/components/ui/input.tsx";
-import {Plus, Search} from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {Plus} from "lucide-react";
 import {
     Pagination,
     PaginationContent,
@@ -15,12 +13,13 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
-import {CreateBookModal} from "@/features/admin/components/books/create-book-modal.tsx";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {CreateUserModal} from "@/features/admin/components/users/create-user-modal";
 import {toast} from "sonner";
-import type {BookDTO} from "@/types/book-dto";
+import type {UserDTO} from "@/types/user-dto";
+import {useState} from "react";
 
-export default function BookTable() {
+export default function UserTable() {
     const [searchParams, setSearchParams] = useSearchParams();
     const queryClient = useQueryClient();
     
@@ -28,48 +27,26 @@ export default function BookTable() {
     const [createModalOpen, setCreateModalOpen] = useState(false);
     
     // Get state from URL
-    const search = searchParams.get('search') || "";
     const page = parseInt(searchParams.get('page') || '0');
     const size = parseInt(searchParams.get('size') || '10');
 
-    // Local state for search input
-    const [searchValue, setSearchValue] = useState(search);
-
-    // Update local search value when URL changes
-    useEffect(() => {
-        setSearchValue(search);
-    }, [search]);
-
     const { data, isLoading, isError } = useQuery({
-        queryKey: ["admin-books", search, page, size],
-        queryFn: () => fetchAllBooks(search, page, size),
+        queryKey: ["admin-users", page, size],
+        queryFn: () => fetchAllUsers(page, size),
     });
 
-    // Create book mutation
-    const createBookMutation = useMutation({
-        mutationFn: (bookData: BookDTO) => createBook(bookData),
+    const createUserMutation = useMutation({
+        mutationFn: (userData: UserDTO) => createUser(userData),
         onSuccess: () => {
-            toast.success("Book created successfully");
+            toast.success("User created successfully");
             setCreateModalOpen(false);
-            queryClient.invalidateQueries({ queryKey: ["admin-books"] });
+            queryClient.invalidateQueries({ queryKey: ["admin-users"] });
         },
         onError: (error) => {
-            toast.error("Failed to create book");
-            console.error("Create book error:", error);
+            toast.error("Failed to create user");
+            console.error("Create user error:", error);
         },
     });
-
-    const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault();
-        const params = new URLSearchParams(searchParams);
-        if (searchValue.trim()) {
-            params.set('search', searchValue.trim());
-        } else {
-            params.delete('search');
-        }
-        params.set('page', '0'); // Reset to first page when searching
-        setSearchParams(params);
-    };
 
     const handlePageChange = (newPage: number) => {
         const params = new URLSearchParams(searchParams);
@@ -84,16 +61,16 @@ export default function BookTable() {
         setSearchParams(params);
     };
 
-    const handleNewBook = () => {
+    const handleNewUser = () => {
         setCreateModalOpen(true);
     };
 
-    const handleCreateBook = (bookData: BookDTO) => {
-        createBookMutation.mutate(bookData);
+    const handleCreateUser = (userData: UserDTO) => {
+        createUserMutation.mutate(userData);
     };
 
     if (isError) {
-        return <div className="container mx-auto py-10 text-red-500">Error loading books.</div>;
+        return <div className="container mx-auto py-10 text-red-500">Error loading users.</div>;
     }
 
     const totalPages = data?.totalPages || 0;
@@ -103,26 +80,13 @@ export default function BookTable() {
         <div className="container mx-auto py-10">
             <div className="flex flex-col gap-4 mb-6">
                 <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-                    <h1 className="text-2xl font-bold">Books Management</h1>
-
+                    <h1 className="text-2xl font-bold">Users Management</h1>
                 </div>
                 
-                <div className={"flex gap-2 justify-end"}>
-                    <form onSubmit={handleSearch}>
-                        <div className="relative flex-1 md:w-md">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                            <Input
-                                type="text"
-                                placeholder="Search books..."
-                                value={searchValue}
-                                onChange={(e) => setSearchValue(e.target.value)}
-                                className="pl-10"
-                            />
-                        </div>
-                    </form>
-                    <Button onClick={handleNewBook} className="flex items-center gap-2">
+                <div className="flex gap-2 justify-end">
+                    <Button onClick={handleNewUser} className="flex items-center gap-2">
                         <Plus className="h-4 w-4" />
-                        New Book
+                        New User
                     </Button>
                 </div>
             </div>
@@ -188,13 +152,13 @@ export default function BookTable() {
                 </div>
             </div>
 
-            {/* Create Book Modal */}
-            <CreateBookModal
+            {/* Create User Modal */}
+            <CreateUserModal
                 open={createModalOpen}
                 onOpenChange={setCreateModalOpen}
-                onSave={handleCreateBook}
-                isLoading={createBookMutation.isPending}
+                onSave={handleCreateUser}
+                isLoading={createUserMutation.isPending}
             />
         </div>
     );
-}
+} 
