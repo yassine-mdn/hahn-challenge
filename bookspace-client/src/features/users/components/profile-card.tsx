@@ -33,7 +33,7 @@ const ProfileCard = (props: ProfileCardProps) => {
         <div className="flex-1">
           <h1 className="text-2xl font-bold  mb-1">{props.user.username}</h1>
           <p className="text-muted-foreground mb-2">Avid reader and book reviewer</p>
-          <p className="text-sm text-muted-foreground">Joined in {props.user.createdAt?.getFullYear()}</p>
+          <p className="text-sm text-muted-foreground">Joined in 2025</p>
         </div>
 
         {user == props.user.username && (

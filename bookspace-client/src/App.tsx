@@ -21,11 +21,11 @@ function App() {
                     <Route index element={<Home/>}/>
                     <Route path={"book/:id"} element={<BookDetails/>}/>
                     <Route path={"user"}>
-                        <Route path={":name"}>
+                        <Route path={":username"}>
                             <Route index element={<UserDetails/>}/>
                             <Route path={"reading-list"} element={<UserReadingList/>}/>
                         </Route>
-                        <Route path={":name/settings"} element={<ProtectedRoute>
+                        <Route path={":username/settings"} element={<ProtectedRoute>
                             <UserSettings/>
                         </ProtectedRoute>}>
 
