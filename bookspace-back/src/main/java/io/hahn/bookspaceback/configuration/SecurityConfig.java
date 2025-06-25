@@ -33,6 +33,7 @@ public class SecurityConfig {
     private final String[] publicEndpoints = {
             "/api/v1/books/**",
             "/api/v1/users/**",
+            "api/v1/reviews/**",
     };
 
     @Bean
