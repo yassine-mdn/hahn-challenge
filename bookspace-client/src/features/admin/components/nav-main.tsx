@@ -1,8 +1,4 @@
-"use client"
-
 import {type LucideIcon} from "lucide-react"
-
-import {Collapsible,} from "@/components/ui/collapsible"
 import {
     SidebarGroup,
     SidebarGroupLabel,
@@ -10,6 +6,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/features/admin/components/sidebar.tsx"
+import {NavLink} from "react-router";
 
 export function NavMain({
                             items,
@@ -30,11 +27,10 @@ export function NavMain({
             <SidebarGroupLabel>Options</SidebarGroupLabel>
             <SidebarMenu>
                 {items.map((item) => (
-                    <Collapsible
+                    <NavLink
                         key={item.title}
-                        asChild
-                        defaultOpen={item.isActive}
-                        className="group/collapsible"
+                        to={item.url}
+                        className={({isActive}) => isActive ? "bg-accent rounded-md text-accent-foreground" : ""}
                     >
                         <SidebarMenuItem>
                             <SidebarMenuButton tooltip={item.title}>
@@ -42,7 +38,7 @@ export function NavMain({
                                 <span>{item.title}</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
-                    </Collapsible>
+                    </NavLink>
                 ))}
             </SidebarMenu>
         </SidebarGroup>

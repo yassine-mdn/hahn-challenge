@@ -22,13 +22,13 @@ const data = {
     navMain: [
         {
             title: "Books",
-            url: "#",
+            url: "books",
             icon: BookOpen,
 
         },
         {
             title: "Users",
-            url: "#",
+            url: "users",
             icon: UsersRound,
 
         },

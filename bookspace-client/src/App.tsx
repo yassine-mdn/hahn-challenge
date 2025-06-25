@@ -1,5 +1,5 @@
 import './App.css'
-import {Route, Routes} from "react-router";
+import {Route, Routes, Navigate} from "react-router";
 import BaseLayout from "@/layouts/BaseLayout.tsx";
 import Home from "@/features/home/pages/Home.tsx";
 import BookDetails from "@/features/books/pages/BookDetails.tsx";
@@ -41,7 +41,8 @@ function App() {
                             <AdminLayout/>
                         </ProtectedRoute>
                     }>
-                        <Route index element={<BookTable/>}/>
+                        <Route index element={<Navigate to="books" replace />}/>
+                        <Route path={"books"} element={<BookTable/>}/>
                         <Route path={"users"} element={<UserTable/>}/>
                     </Route>
                     <Route path={"/login"} element={<Login/>}/>
