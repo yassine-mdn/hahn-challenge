@@ -2,7 +2,6 @@ import BookCard from "@/features/books/components/book-card.tsx";
 import {useQuery} from "@tanstack/react-query";
 import {fetchAllBooks} from "@/services/book.service.ts";
 import {useSearchParams} from "react-router";
-import Logo from "@/components/ui/logo.tsx";
 import {
     Pagination,
     PaginationContent,
@@ -11,6 +10,7 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination";
+import Loading from "@/components/ui/loading.tsx";
 
 const BrowseBooks = () => {
 
@@ -32,11 +32,7 @@ const BrowseBooks = () => {
 
     if (books.isLoading) {
         return (
-            <div className="h-screen w-full grid place-content-center">
-                <div className="animate-pulse fade-in-0 duration-1000">
-                    <Logo className="w-12 h-12"/>
-                </div>
-            </div>
+            <Loading/>
         )
     }
 
