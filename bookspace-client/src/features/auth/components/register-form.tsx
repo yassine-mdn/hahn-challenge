@@ -4,7 +4,7 @@ import {Card, CardContent, CardHeader, CardTitle,} from "@/components/ui/card"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import Logo from "@/components/ui/logo.tsx";
-import {Link} from "react-router";
+import {Link, useLocation} from "react-router";
 import {useForm} from "react-hook-form"
 import {useMutation} from "@tanstack/react-query"
 import {useAuth} from "@/features/auth/AuthContext"
@@ -17,10 +17,12 @@ export function RegisterForm({
                           }: React.ComponentProps<"div">) {
     const { signup } = useAuth();
     const { register, handleSubmit, formState: { errors }, setError } = useForm<RegisterDTO>();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
 
     const mutation = useMutation<void, any, RegisterDTO>({
         mutationFn: async (data) => {
-            await signup(data);
+            await signup(data, from);
         },
         onSuccess: () => {
             toast.success("Signup successful");

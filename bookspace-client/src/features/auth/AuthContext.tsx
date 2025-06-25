@@ -9,8 +9,8 @@ import {useNavigate} from "react-router";
 interface AuthContextType {
   user: string | null;
   role: AuthenticationResponseDTORoleEnum | null;
-  login: (auth: AuthenticationRequestDTO) => void;
-  signup: (auth: RegisterDTO) => void;
+  login: (auth: AuthenticationRequestDTO, redirectTo?: string) => void;
+  signup: (auth: RegisterDTO, redirectTo?: string) => void;
   logout: () => void;
   updateUser: (username: string) => void;
   isAuthenticated: boolean;
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setLoading(false);
   }, []);
 
-  const login = async (data: AuthenticationRequestDTO) => {
+  const login = async (data: AuthenticationRequestDTO, redirectTo?: string) => {
     const res = await authAPI.login(data);
       setUser(res.username);
       setRole(res.role);
@@ -51,19 +51,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       Cookies.set("role", res.role);
       Cookies.set("accessToken", res.accessToken);
       Cookies.set("refreshToken", res.refreshToken);
-      if (res.role == "ADMIN")
+      if (redirectTo) {
+        navigate(redirectTo, { replace: true });
+      } else if (res.role == "ADMIN")
         navigate("/admin");
       else
         navigate("/");
   };
 
-  const signup = async(data: RegisterDTO) => {
+  const signup = async(data: RegisterDTO, redirectTo?: string) => {
     const res = await authAPI.register(data);
     Cookies.set("user", res.username);
     Cookies.set("role", res.role);
     Cookies.set("accessToken", res.accessToken);
     Cookies.set("refreshToken", res.refreshToken);
-    navigate("/");
+    if (redirectTo) {
+      navigate(redirectTo, { replace: true });
+    } else {
+      navigate("/");
+    }
   }
 
   const logout = () => {

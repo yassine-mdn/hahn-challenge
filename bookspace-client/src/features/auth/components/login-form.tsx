@@ -4,12 +4,13 @@ import {Card, CardContent, CardHeader, CardTitle,} from "@/components/ui/card"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import Logo from "@/components/ui/logo.tsx";
-import {Link} from "react-router";
+import {Link, useLocation} from "react-router";
 import {useForm} from "react-hook-form"
 import {useMutation} from "@tanstack/react-query"
 import {useAuth} from "@/features/auth/AuthContext"
 import type {AuthenticationRequestDTO} from "@/types/authentication-request-dto"
 import {useState} from "react"
+import { toast } from "sonner"
 
 export function LoginForm({
                               className,
@@ -18,10 +19,18 @@ export function LoginForm({
     const { login } = useAuth();
     const [error, setError] = useState<string | null>(null);
     const { register, handleSubmit, formState: { errors } } = useForm<AuthenticationRequestDTO>();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
 
-    const mutation = useMutation<void, Error, AuthenticationRequestDTO>({
+    const mutation = useMutation<void, any, AuthenticationRequestDTO>({
         mutationFn: async (data) => {
-           login(data)
+           await login(data, from)
+        },
+        onSuccess: () => {
+            toast.success("Login successful");
+        },
+        onError: () => {
+            toast.error("Invalid credential");
         }
     });
 
@@ -88,7 +97,7 @@ export function LoginForm({
                             </div>
                             <div className="text-center text-sm">
                                 Don&apos;t have an account?{" "}
-                                <Link to={"/sign-up"} className="underline underline-offset-4">
+                                <Link to={"/sign-up"} state={{ from: from }} className="underline underline-offset-4">
                                     Sign up
                                 </Link>
                             </div>
