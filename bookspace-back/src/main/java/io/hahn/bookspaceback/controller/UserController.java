@@ -26,13 +26,13 @@ public class UserController {
     @PutMapping("/{username}")
     @PreAuthorize("#username == principal.user.username or hasAuthority('ADMIN')")
     public ResponseEntity<UserDTO> update(@PathVariable String username, @Valid @RequestBody UserDTO userDTO) {
-        UserDTO updatedContent = userService.update(username, userDTO);
+        UserDTO updatedContent = userService.updateByUsername(username, userDTO);
         return ResponseEntity.ok(updatedContent);
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<UserDTO> getById(@PathVariable String username) {
-        UserDTO content = userService.getById(username);
+    public ResponseEntity<UserDTO> getByUsername(@PathVariable String username) {
+        UserDTO content = userService.getByUsername(username);
         return ResponseEntity.ok(content);
     }
 

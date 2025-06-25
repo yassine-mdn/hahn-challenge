@@ -82,3 +82,15 @@ export enum ReadingListDTOStatusEnum {
     DROPPED = 'DROPPED'
 }
 
+export const ReadingListStatusLabels: Record<ReadingListDTOStatusEnum, string> = {
+    [ReadingListDTOStatusEnum.PLANTOREAD]: 'Plan to Read',
+    [ReadingListDTOStatusEnum.READING]: 'Reading',
+    [ReadingListDTOStatusEnum.COMPLETED]: 'Completed',
+    [ReadingListDTOStatusEnum.ONHOLD]: 'On Hold',
+    [ReadingListDTOStatusEnum.DROPPED]: 'Dropped'
+};
+
+export function getReadingListStatusLabel(status: ReadingListDTOStatusEnum): string {
+    return ReadingListStatusLabels[status] || status;
+}
+

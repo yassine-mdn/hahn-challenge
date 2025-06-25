@@ -207,15 +207,17 @@ const BookDetails = () => {
                     <ScrollArea>
                         <div className="flex space-x-4 pb-4">
                             {similarBooks.map((book) => (
-                                <BookCard
-                                    id={book.id}
-                                    title={book.title}
-                                    author={book.author}
-                                    publisher={book.publisher}
-                                    genres={book.genres}
-                                    description={book.description}
-                                    coverUrl={book.coverUrl}
-                                />
+                                <div className={"w-52"}>
+                                    <BookCard
+                                        id={book.id}
+                                        title={book.title}
+                                        author={book.author}
+                                        publisher={book.publisher}
+                                        genres={book.genres}
+                                        description={book.description}
+                                        coverUrl={book.coverUrl}
+                                    />
+                                </div>
                             ))}
                         </div>
                         <ScrollBar orientation="horizontal"/>
