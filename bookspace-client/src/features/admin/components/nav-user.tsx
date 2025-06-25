@@ -1,8 +1,8 @@
-import {ChevronsUpDown, LogOut,} from "lucide-react"
+import {Album, ChevronsUpDown, LogOut,} from "lucide-react"
 import {toast} from "sonner"
 import {useAuth} from "@/features/auth/AuthContext"
 import {useMutation} from "@tanstack/react-query"
-
+import {Link} from "react-router";
 import {Avatar, AvatarFallback, AvatarImage,} from "@/components/ui/avatar.tsx"
 import {
   DropdownMenu,
@@ -67,6 +67,13 @@ export function NavUser() {
                 </div>
               </div>
             </DropdownMenuLabel>
+            <DropdownMenuSeparator/>
+            <DropdownMenuItem asChild>
+                <Link to={`/user/${user}/settings`} className={"flex space-x-2"}>
+                    <Album/>
+                    User View
+                </Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => logoutMutation.mutate()}>
               <LogOut />
