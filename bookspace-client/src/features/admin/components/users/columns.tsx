@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import type { UserDTO } from "@/types/user-dto";
 import { UserDTORoleEnum } from "@/types/user-dto";
 import { UserActions } from "./user-actions";
+import { Link } from "react-router";
 
 export const columns: ColumnDef<UserDTO>[] = [
     {
@@ -17,7 +18,7 @@ export const columns: ColumnDef<UserDTO>[] = [
         accessorKey: "username",
         header: "Username",
         cell: ({ row }) => {
-            return <span className="font-medium">{row.original.username}</span>;
+            return <Link to={`/user/${row.original.username}`} className="font-medium hover:underline">{row.original.username}</Link>;
         },
     },
     {
