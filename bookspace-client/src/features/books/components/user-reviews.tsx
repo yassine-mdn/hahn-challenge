@@ -2,6 +2,7 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar.tsx"
 import {Card, CardContent} from "@/components/ui/card.tsx"
 import {Rating, RatingButton} from "@/components/ui/rating.tsx";
 import type {ReviewDTO} from "@/types/review-dto.ts";
+import { Link } from "react-router";
 
 type Props = {
     review: ReviewDTO
@@ -50,7 +51,7 @@ const UserReviews = (props: Props) => {
                     <div className="flex-1 space-y-2">
                         <div className="flex items-center justify-between">
                             <div className="flex flex-col items-start space-y-2">
-                                <h4 className="font-semibold text-sm">{props.review.username}</h4>
+                                <Link to={`/user/${props.review.username}`} className="font-semibold text-sm hover:underline">{props.review.username}</Link>
                                 <div className="flex items-center space-x-1">
                                     <Rating defaultValue={props.review.rating} readOnly className="text-primary">
                                         {Array.from({length: 5}).map((_, index) => (
