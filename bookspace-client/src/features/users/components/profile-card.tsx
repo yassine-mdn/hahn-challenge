@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { type UserDTO } from "@/types/user-dto";
 import {useAuth} from "@/features/auth/AuthContext.tsx";
+import {Link} from "react-router";
 
 type ProfileCardProps = {
     user: UserDTO
@@ -37,8 +38,8 @@ const ProfileCard = (props: ProfileCardProps) => {
         </div>
 
         {user == props.user.username && (
-            <Button variant="outline" className="shrink-0">
-              Edit Profile
+            <Button variant="outline" className="shrink-0" asChild>
+              <Link to={"settings"}>Edit Profile</Link>
             </Button>
         )}
       </div>
