@@ -14,6 +14,7 @@ import io.hahn.bookspaceback.util.PageWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -90,7 +91,7 @@ public class ReviewService {
             throw new CustomException("Invalid pagination parameters");
         }
         try {
-            return new PageWrapper<>(reviewRepository.findAllByReadingList_Book_Id(bookId, PageRequest.of(pageNumber, pageSize)).map(reviewMapper::toDTO));
+            return new PageWrapper<>(reviewRepository.findAllByReadingList_Book_Id(bookId, PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC,"createdAt"))).map(reviewMapper::toDTO));
         } catch (Exception ex) {
             log.error("Error fetching reviews for bookId {}: {}", bookId, ex.getMessage());
             throw new CustomException("Failed to fetch reviews for bookId " + bookId + " : " + ex);
@@ -102,7 +103,7 @@ public class ReviewService {
             throw new CustomException("Invalid pagination parameters");
         }
         try {
-            return new PageWrapper<>(reviewRepository.findAllByReadingList_User_Username(username, PageRequest.of(pageNumber, pageSize)).map(reviewMapper::toDTO));
+            return new PageWrapper<>(reviewRepository.findAllByReadingList_User_Username(username, PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC,"createdAt"))).map(reviewMapper::toDTO));
         } catch (Exception ex) {
             log.error("Error fetching reviews for username {} : {}", username, ex.getMessage());
             throw new CustomException("Failed to fetch reviews for username " + username + " : " + ex);
