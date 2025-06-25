@@ -26,3 +26,10 @@ export const fetchAllBooks = async (keywork:string, pageNumber: number, pageSize
             size: pageSize,
         }
     })).data;
+
+// Admin operations
+export const updateBook = async (id: number, bookData: BookDTO): Promise<BookDTO> =>
+  (await instance.put(`api/v1/books/${id}`, bookData)).data;
+
+export const deleteBook = async (id: number): Promise<void> =>
+  (await instance.delete(`api/v1/books/${id}`)).data;
