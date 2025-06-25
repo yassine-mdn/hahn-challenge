@@ -1,8 +1,8 @@
 import {DataTable} from "@/components/ui/data-table.tsx";
 import {columns} from "@/features/admin/components/books/columns.tsx";
-import {useQuery} from "@tanstack/react-query";
-import {fetchAllBooks} from "@/services/book.service";
-import {useNavigate, useSearchParams} from "react-router";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import {createBook, fetchAllBooks} from "@/services/book.service";
+import {useSearchParams} from "react-router";
 import {useEffect, useState} from "react";
 import {Button} from "@/components/ui/button.tsx";
 import {Input} from "@/components/ui/input.tsx";
@@ -16,10 +16,16 @@ import {
     PaginationPrevious,
 } from "@/components/ui/pagination";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
+import {CreateBookModal} from "@/features/admin/components/books/create-book-modal.tsx";
+import {toast} from "sonner";
+import type {BookDTO} from "@/types/book-dto";
 
 export default function BookTable() {
     const [searchParams, setSearchParams] = useSearchParams();
-    const navigate = useNavigate();
+    const queryClient = useQueryClient();
+    
+    // Modal state
+    const [createModalOpen, setCreateModalOpen] = useState(false);
     
     // Get state from URL
     const search = searchParams.get('search') || "";
@@ -37,6 +43,20 @@ export default function BookTable() {
     const { data, isLoading, isError } = useQuery({
         queryKey: ["admin-books", search, page, size],
         queryFn: () => fetchAllBooks(search, page, size),
+    });
+
+    // Create book mutation
+    const createBookMutation = useMutation({
+        mutationFn: (bookData: BookDTO) => createBook(bookData),
+        onSuccess: () => {
+            toast.success("Book created successfully");
+            setCreateModalOpen(false);
+            queryClient.invalidateQueries({ queryKey: ["admin-books"] });
+        },
+        onError: (error) => {
+            toast.error("Failed to create book");
+            console.error("Create book error:", error);
+        },
     });
 
     const handleSearch = (e: React.FormEvent) => {
@@ -65,11 +85,12 @@ export default function BookTable() {
     };
 
     const handleNewBook = () => {
-        // For now, just navigate to a placeholder route
-        // This can be updated later when the create book functionality is implemented
-        navigate('/admin/books/new');
+        setCreateModalOpen(true);
     };
 
+    const handleCreateBook = (bookData: BookDTO) => {
+        createBookMutation.mutate(bookData);
+    };
 
     if (isError) {
         return <div className="container mx-auto py-10 text-red-500">Error loading books.</div>;
@@ -166,6 +187,14 @@ export default function BookTable() {
                     </Pagination>
                 </div>
             </div>
+
+            {/* Create Book Modal */}
+            <CreateBookModal
+                open={createModalOpen}
+                onOpenChange={setCreateModalOpen}
+                onSave={handleCreateBook}
+                isLoading={createBookMutation.isPending}
+            />
         </div>
     );
 }

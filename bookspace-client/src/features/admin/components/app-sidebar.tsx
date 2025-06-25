@@ -15,11 +15,6 @@ import Logo from "@/components/ui/logo.tsx";
 
 // This is sample data.
 const data = {
-    user: {
-        name: "shadcn",
-        email: "m@example.com",
-        avatar: "/avatars/shadcn.jpg",
-    },
     teams: {
         name: "BookSpace Admin",
         logo: Logo
@@ -50,7 +45,7 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
                 <NavMain items={data.navMain}/>
             </SidebarContent>
             <SidebarFooter>
-                <NavUser user={data.user}/>
+                <NavUser/>
             </SidebarFooter>
             <SidebarRail/>
         </Sidebar>
