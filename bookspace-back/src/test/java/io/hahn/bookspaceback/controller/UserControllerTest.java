@@ -163,7 +163,7 @@ class UserControllerTest {
         String id = "test-uuid";
         String jsonRequest = objectMapper.writeValueAsString(mockUserDTO);
 
-        when(userService.update(eq(id), any(UserDTO.class))).thenReturn(mockUserDTO);
+        when(userService.updateByUsername(eq(id), any(UserDTO.class))).thenReturn(mockUserDTO);
 
         mockMvc.perform(put("/api/v1/users/" + id)
                         .contentType("application/json")
@@ -180,7 +180,7 @@ class UserControllerTest {
         String id = "test-uuid";
         String jsonRequest = objectMapper.writeValueAsString(mockUserDTO);
 
-        when(userService.update(eq(id), any(UserDTO.class))).thenThrow(new CustomException("Error occurred"));
+        when(userService.updateByUsername(eq(id), any(UserDTO.class))).thenThrow(new CustomException("Error occurred"));
 
         mockMvc.perform(put("/api/v1/users/" + id)
                         .contentType("application/json")
@@ -203,7 +203,7 @@ class UserControllerTest {
     void getById_ShouldReturnUserDTO_WhenSuccess() throws Exception {
         String id = "test-uuid";
 
-        when(userService.getById(id)).thenReturn(mockUserDTO);
+        when(userService.getByUsername(id)).thenReturn(mockUserDTO);
 
         mockMvc.perform(get("/api/v1/users/" + id))
                 .andExpect(status().isOk())
@@ -217,7 +217,7 @@ class UserControllerTest {
     void getById_ShouldReturnBadRequest_WhenErrorOccurs() throws Exception {
         String id = "test-uuid";
 
-        when(userService.getById(id)).thenThrow(new CustomException("Error occurred"));
+        when(userService.getByUsername(id)).thenThrow(new CustomException("Error occurred"));
 
         mockMvc.perform(get("/api/v1/users/" + id))
                 .andExpect(status().isBadRequest());

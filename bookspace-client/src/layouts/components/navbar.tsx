@@ -1,4 +1,4 @@
-import {LogOut, Menu, Search, Settings2} from "lucide-react";
+import {LogOut, Menu, Search, Settings2, Shield} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import {Sheet, SheetContent, SheetTrigger,} from "@/components/ui/sheet";
 import {Link, useNavigate, useSearchParams} from "react-router";
@@ -27,7 +27,7 @@ interface MenuItem {
 const Navbar = () => {
 
     const [isOpen, setIsOpen] = useState(false)
-    const { user, logout, isAuthenticated } = useAuth();
+    const { user,role, logout, isAuthenticated } = useAuth();
     const isMobile = useIsMobile();
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -126,6 +126,14 @@ const Navbar = () => {
                                     </Link>
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
+                                {role === "ADMIN" && (
+                                    <DropdownMenuItem asChild>
+                                    <Link to={`/admin`} className={"flex space-x-2"}>
+                                        <Shield/>
+                                        Admin View
+                                    </Link>
+                                </DropdownMenuItem>
+                                )}
                                 <DropdownMenuItem asChild>
                                     <Link to={`/user/${user}/settings`} className={"flex space-x-2"}>
                                         <Settings2/>

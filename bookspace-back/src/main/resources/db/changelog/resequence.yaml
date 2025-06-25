@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 19
+      author: yassine
+      runOnChange: true
+      changes:
+        - sql:
+            dbms: postgresql
+            sql: >
+              SELECT setval('book_seq', (SELECT MAX(id) FROM book));
+  - changeSet:
+      id: 21
+      author: yassine
+      runOnChange: true
+      changes:
+        - sql:
+            dbms: postgresql
+            sql: >
+              SELECT setval('reading_list_seq', (SELECT MAX(id) FROM reading_list));
+  - changeSet:
+      id: 22
+      author: yassine
+      runOnChange: true
+      changes:
+        - sql:
+            dbms: postgresql
+            sql: >
+              SELECT setval('review_seq', (SELECT MAX(id) FROM review));

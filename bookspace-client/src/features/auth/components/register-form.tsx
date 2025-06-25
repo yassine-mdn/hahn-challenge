@@ -4,29 +4,42 @@ import {Card, CardContent, CardHeader, CardTitle,} from "@/components/ui/card"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import Logo from "@/components/ui/logo.tsx";
-import {Link} from "react-router";
+import {Link, useLocation} from "react-router";
 import {useForm} from "react-hook-form"
 import {useMutation} from "@tanstack/react-query"
 import {useAuth} from "@/features/auth/AuthContext"
-import {useState} from "react"
 import type {RegisterDTO} from "@/types/register-dto.ts";
+import { toast } from "sonner"
 
 export function RegisterForm({
                               className,
                               ...props
                           }: React.ComponentProps<"div">) {
     const { signup } = useAuth();
-    const [error, setError] = useState<string | null>(null);
-    const { register, handleSubmit, formState: { errors } } = useForm<RegisterDTO>();
+    const { register, handleSubmit, formState: { errors }, setError } = useForm<RegisterDTO>();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
 
-    const mutation = useMutation<void, Error, RegisterDTO>({
+    const mutation = useMutation<void, any, RegisterDTO>({
         mutationFn: async (data) => {
-            signup(data)
+            await signup(data, from);
+        },
+        onSuccess: () => {
+            toast.success("Signup successful");
+        },
+        onError: (error) => {
+            if (error?.response?.status === 400 && typeof error.response.data === "object") {
+                const fieldErrors = error.response.data;
+                Object.entries(fieldErrors).forEach(([field, message]) => {
+                    setError(field as keyof RegisterDTO, { type: "manual", message: message as string });
+                });
+            } else {
+                setError("root", { type: "manual", message: "An unexpected error occurred." });
+            }
         }
     });
 
     const onSubmit = (data: RegisterDTO) => {
-        setError(null);
         mutation.mutate(data);
     };
 
@@ -64,7 +77,7 @@ export function RegisterForm({
                                         type="text"
                                         placeholder="your email"
                                         autoComplete="email"
-                                        {...register("username", { required: "email is required" })}
+                                        {...register("email", { required: "email is required" })}
                                         aria-invalid={!!errors.email}
                                     />
                                     {errors.email && (
@@ -92,9 +105,9 @@ export function RegisterForm({
                                         <span className="text-xs text-red-500">{errors.password.message}</span>
                                     )}
                                 </div>
-                                {error && <div className="text-xs text-red-500 text-center">{error}</div>}
+                                {errors.root && <div className="text-xs text-red-500 text-center">{errors.root.message}</div>}
                                 <Button type="submit" className="w-full" disabled={mutation.isPending}>
-                                    {mutation.isPending ? "Logging in..." : "Login"}
+                                    {mutation.isPending ? "Signing in..." : "Sign up"}
                                 </Button>
                             </div>
                             <div className="text-center text-sm">

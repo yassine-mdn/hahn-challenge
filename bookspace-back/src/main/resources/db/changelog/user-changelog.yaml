@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 3
+      id: 4
       author: yassine
       preConditions:
         - onFail: MARK_RAN
@@ -42,7 +42,7 @@ databaseChangeLog:
                   type: DATETIME
             tableName: users
   - changeSet:
-      id: 4
+      id: 5
       author: yassine
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       preConditions:

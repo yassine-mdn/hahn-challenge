@@ -8,7 +8,7 @@ import RatingDistribution from "@/features/books/components/rating-distribution.
 import UserReviews from "@/features/books/components/user-reviews.tsx";
 import {ReadingStatusModal} from "@/features/books/components/reading-status-modal.tsx";
 import {useQuery} from "@tanstack/react-query";
-import {useParams, useNavigate} from "react-router";
+import {useParams, useNavigate, useLocation} from "react-router";
 import {fetchBookDetails, fetchRatings, fetchSimilarBooks} from "@/services/book.service.ts";
 import {fetchReadingListItemByBookId} from "@/services/reading-list.service.ts";
 import {useAuth} from "@/features/auth/AuthContext.tsx";
@@ -21,6 +21,7 @@ const BookDetails = () => {
     const {id} = useParams<{ id: string }>();
     const {user, isAuthenticated} = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
     const [modalOpen, setModalOpen] = useState(false);
     const bookId = parseInt(id || "1");
 
@@ -58,7 +59,7 @@ const BookDetails = () => {
 
     const handleReadingListClick = () => {
         if (!isAuthenticated) {
-            navigate("/login");
+            navigate("/login", { state: { from: location } });
             return;
         }
         setModalOpen(true);

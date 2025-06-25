@@ -115,7 +115,7 @@ public class BookService {
         }
         try {
             // could be dynamic as a param (1D, 1W, 1M, 1Y)
-            LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(1);
+            LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(120);
             return new PageWrapper<>(bookRepository.findAllByPopularity(oneDayAgo, PageRequest.of(pageNumber, pageSize)).map(bookMapper::toDTO));
         } catch (Exception ex) {
             log.error("Error fetching popular books : {}", ex.getMessage());

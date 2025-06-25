@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-        id: 1750685206104-6
+        id: 11
         author: yassine
         objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
         changes:
@@ -9,7 +9,7 @@ databaseChangeLog:
               sequenceName: review_seq
               startValue: 1
   - changeSet:
-      id: 1750685206104-7
+      id: 12
       author: yassine
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       preConditions:
@@ -41,7 +41,7 @@ databaseChangeLog:
                   type: DATETIME
             tableName: review
   - changeSet:
-      id: 1750685206104-12
+      id: 13
       author: yassine
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       preConditions:
