@@ -28,6 +28,9 @@ export const fetchAllBooks = async (keywork:string, pageNumber: number, pageSize
     })).data;
 
 // Admin operations
+export const createBook = async (bookData: BookDTO): Promise<BookDTO> =>
+  (await instance.post(`api/v1/books`, bookData)).data;
+
 export const updateBook = async (id: number, bookData: BookDTO): Promise<BookDTO> =>
   (await instance.put(`api/v1/books/${id}`, bookData)).data;
 
