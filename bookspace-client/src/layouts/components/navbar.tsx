@@ -1,7 +1,7 @@
 import {LogOut, Menu, Search, Settings2} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import {Sheet, SheetContent, SheetTrigger,} from "@/components/ui/sheet";
-import {Link} from "react-router";
+import {Link, useNavigate, useSearchParams} from "react-router";
 import {useState} from "react";
 import {Input} from "@/components/ui/input.tsx";
 import {
@@ -29,6 +29,10 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false)
     const { user, logout, isAuthenticated } = useAuth();
     const isMobile = useIsMobile();
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const [searchValue, setSearchValue] = useState(searchParams.get('q') || '');
+    
     const logoutMutation = useMutation({
         mutationFn: async () => {
             logout();
@@ -38,9 +42,15 @@ const Navbar = () => {
         },
     });
 
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (searchValue.trim()) {
+            navigate(`/browse?q=${encodeURIComponent(searchValue.trim())}`);
+        }
+    };
+
     const navigationItems: MenuItem[] = [
         { name: "Home", link: "/" },
-        { name: "My Books", link: "/my-books" },
         { name: "Browse", link: "/browse" },
     ]
 
@@ -82,10 +92,16 @@ const Navbar = () => {
                 </div>
 
                 <div className="flex items-center justify-center gap-6">
-                    <div className="relative">
+                    <form onSubmit={handleSearch} className="relative">
                         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input type="search" placeholder="Search books..." className="pl-8 w-[300px] lg:w-[400px] border-0" />
-                    </div>
+                        <Input 
+                            type="search" 
+                            placeholder="Search books..." 
+                            className="pl-8 w-[300px] lg:w-[400px] border-0"
+                            value={searchValue}
+                            onChange={(e) => setSearchValue(e.target.value)}
+                        />
+                    </form>
                     {isAuthenticated ? (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>

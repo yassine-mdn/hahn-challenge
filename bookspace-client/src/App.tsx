@@ -3,6 +3,7 @@ import {Route, Routes} from "react-router";
 import BaseLayout from "@/layouts/BaseLayout.tsx";
 import Home from "@/features/home/pages/Home.tsx";
 import BookDetails from "@/features/books/pages/BookDetails.tsx";
+import BrowseBooks from "@/features/books/pages/BrowseBooks.tsx";
 import UserDetails from "@/features/users/pages/UserDetails";
 import UserSettings from "@/features/users/pages/UserSettings";
 import AdminLayout from "@/layouts/AdminLayout.tsx";
@@ -16,33 +17,34 @@ import UserReadingList from "@/features/users/pages/UserReadingList.tsx";
 function App() {
     return (
         <AuthProvider>
-            <Routes>
-                <Route element={<BaseLayout/>}>
-                    <Route index element={<Home/>}/>
-                    <Route path={"book/:id"} element={<BookDetails/>}/>
-                    <Route path={"user"}>
-                        <Route path={":username"}>
-                            <Route index element={<UserDetails/>}/>
-                            <Route path={"reading-list"} element={<UserReadingList/>}/>
-                        </Route>
-                        <Route path={":username/settings"} element={<ProtectedRoute>
-                            <UserSettings/>
-                        </ProtectedRoute>}>
+                <Routes>
+                    <Route element={<BaseLayout/>}>
+                        <Route index element={<Home/>}/>
+                        <Route path={"browse"} element={<BrowseBooks/>}/>
+                        <Route path={"book/:id"} element={<BookDetails/>}/>
+                        <Route path={"user"}>
+                            <Route path={":username"}>
+                                <Route index element={<UserDetails/>}/>
+                                <Route path={"reading-list"} element={<UserReadingList/>}/>
+                            </Route>
+                            <Route path={":username/settings"} element={<ProtectedRoute>
+                                <UserSettings/>
+                            </ProtectedRoute>}>
 
+                            </Route>
                         </Route>
                     </Route>
-                </Route>
 
-                <Route path={"admin"} element={
-                    <ProtectedRoute requiredRole={"ADMIN"}>
-                        <AdminLayout/>
-                    </ProtectedRoute>
-                }>
-                    <Route index element={<BookTable/>}/>
-                </Route>
-                <Route path={"/login"} element={<Login/>}/>
-                <Route path={"/sign-up"} element={<SignUp/>}/>
-            </Routes>
+                    <Route path={"admin"} element={
+                        <ProtectedRoute requiredRole={"ADMIN"}>
+                            <AdminLayout/>
+                        </ProtectedRoute>
+                    }>
+                        <Route index element={<BookTable/>}/>
+                    </Route>
+                    <Route path={"/login"} element={<Login/>}/>
+                    <Route path={"/sign-up"} element={<SignUp/>}/>
+                </Routes>
         </AuthProvider>
     )
 }
