@@ -8,25 +8,36 @@ import {Link} from "react-router";
 import {useForm} from "react-hook-form"
 import {useMutation} from "@tanstack/react-query"
 import {useAuth} from "@/features/auth/AuthContext"
-import {useState} from "react"
 import type {RegisterDTO} from "@/types/register-dto.ts";
+import { toast } from "sonner"
 
 export function RegisterForm({
                               className,
                               ...props
                           }: React.ComponentProps<"div">) {
     const { signup } = useAuth();
-    const [error, setError] = useState<string | null>(null);
-    const { register, handleSubmit, formState: { errors } } = useForm<RegisterDTO>();
+    const { register, handleSubmit, formState: { errors }, setError } = useForm<RegisterDTO>();
 
-    const mutation = useMutation<void, Error, RegisterDTO>({
+    const mutation = useMutation<void, any, RegisterDTO>({
         mutationFn: async (data) => {
-            signup(data)
+            await signup(data);
+        },
+        onSuccess: () => {
+            toast.success("Signup successful");
+        },
+        onError: (error) => {
+            if (error?.response?.status === 400 && typeof error.response.data === "object") {
+                const fieldErrors = error.response.data;
+                Object.entries(fieldErrors).forEach(([field, message]) => {
+                    setError(field as keyof RegisterDTO, { type: "manual", message: message as string });
+                });
+            } else {
+                setError("root", { type: "manual", message: "An unexpected error occurred." });
+            }
         }
     });
 
     const onSubmit = (data: RegisterDTO) => {
-        setError(null);
         mutation.mutate(data);
     };
 
@@ -92,7 +103,7 @@ export function RegisterForm({
                                         <span className="text-xs text-red-500">{errors.password.message}</span>
                                     )}
                                 </div>
-                                {error && <div className="text-xs text-red-500 text-center">{error}</div>}
+                                {errors.root && <div className="text-xs text-red-500 text-center">{errors.root.message}</div>}
                                 <Button type="submit" className="w-full" disabled={mutation.isPending}>
                                     {mutation.isPending ? "Signing in..." : "Sign up"}
                                 </Button>
