@@ -4,6 +4,7 @@ import {getBookGenreLabel} from "@/types/book-dto.ts";
 import {Badge} from "@/components/ui/badge.tsx";
 import {Checkbox} from "@/components/ui/checkbox.tsx";
 import { BookActions } from "./book-actions";
+import { Link } from "react-router";
 
 export const columns: ColumnDef<BookDTO>[] = [
   {
@@ -12,7 +13,9 @@ export const columns: ColumnDef<BookDTO>[] = [
     cell: ({ row }) => {
       const url = row.original.coverUrl;
       return url ? (
-        <img src={url} alt={row.original.title} className="object-cover w-16 aspect-5/8 rounded-lg" />
+        <Link to={`/book/${row.original.id}`}>
+          <img src={url} alt={row.original.title} className="object-cover w-16 aspect-5/8 rounded-lg" />
+        </Link>
       ) : (
         <span style={{ color: '#aaa' }}>No Image</span>
       );
@@ -23,6 +26,13 @@ export const columns: ColumnDef<BookDTO>[] = [
   {
     accessorKey: "title",
     header: "Title",
+    cell: ({ row }) => {
+      return (
+        <Link to={`/book/${row.original.id}`} className="hover:underline">
+          {row.original.title}
+        </Link>
+      )
+    }
   },
   {
     accessorKey: "author",

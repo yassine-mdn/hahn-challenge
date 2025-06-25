@@ -16,6 +16,9 @@ import {getBookGenreLabel} from "@/types/book-dto.ts";
 import {fetchBookReviews} from "@/services/review.service.ts";
 import {getReadingListStatusLabel} from "@/types/reading-list-dto.ts";
 import {useState} from "react";
+import AddReviewCard from "../components/add-review-card";
+import type { ReadingListDTO } from "@/types/reading-list-dto";
+import type { ReviewDTO } from "@/types/review-dto";
 
 const BookDetails = () => {
     const {id} = useParams<{ id: string }>();
@@ -100,6 +103,17 @@ const BookDetails = () => {
         return "create" as const;
     };
 
+    const shouldShowAddReviewCard = (
+        readingList: ReadingListDTO | undefined,
+        reviews: ReviewDTO[],
+        user: string | null
+    ): boolean => {
+        if (!readingList) return false;
+        return !reviews.some(
+            (review) => review.book?.id == readingList.book?.id && review.username == user
+        );
+    };
+
     if (!book) {
         return <div className="p-4">Book not found</div>;
     }
@@ -178,15 +192,22 @@ const BookDetails = () => {
                     </ScrollArea>
                     <Separator/>
                     <h2 className="text-xl font-semibold tracking-tight">
-                        Community reviews
+                        Ratings & reviews
                     </h2>
-                    <div className={"w-full"}>
+                    <div className="flex flex-col gap-4 w-full justify-center items-center">
+                    <div className={"w-full md:w-3xl mb-8"}>
                          <RatingDistribution ratings={ratings.data}/>
                     </div>
-                    <div className="mx-auto space-y-4">
+                    {
+                        shouldShowAddReviewCard(readingList.data ?? undefined, reviews.data.content, user) && (
+                            <AddReviewCard readingList={readingList.data ?? undefined} />
+                        )
+                    }
+                    <div className="space-y-4 mt-8">
                         {reviews.data.content.map((review) => (
                                 <UserReviews key={review.id} review={review}/>
                         ))}
+                    </div>
                     </div>
                 </div>
             </div>
