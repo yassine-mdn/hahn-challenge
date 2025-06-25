@@ -13,6 +13,7 @@ import Login from "@/features/auth/pages/Login.tsx";
 import SignUp from "@/features/auth/pages/sign-up.tsx";
 import BookTable from "@/features/admin/pages/books/book-table.tsx";
 import UserReadingList from "@/features/users/pages/UserReadingList.tsx";
+import UserTable from "@/features/admin/pages/users/user-table.tsx";
 
 function App() {
     return (
@@ -41,6 +42,7 @@ function App() {
                         </ProtectedRoute>
                     }>
                         <Route index element={<BookTable/>}/>
+                        <Route path={"users"} element={<UserTable/>}/>
                     </Route>
                     <Route path={"/login"} element={<Login/>}/>
                     <Route path={"/sign-up"} element={<SignUp/>}/>

@@ -34,5 +34,5 @@ export const createUser = async (userData: UserDTO): Promise<UserDTO> =>
 export const updateUser = async (id: number, userData: UserDTO): Promise<UserDTO> =>
     (await instance.put(`/api/v1/users/${id}`, userData)).data;
 
-export const deleteUser = async (id: number): Promise<void> =>
-    (await instance.delete(`/api/v1/users/${id}`)).data;
+export const deleteUser = async (username: string): Promise<void> =>
+    (await instance.delete(`/api/v1/users/${username}`)).data;
