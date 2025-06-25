@@ -12,7 +12,9 @@
  * Do not edit the class manually.
  */
 
- /**
+ import type {ReadingListDTOStatusEnum} from "@/types/reading-list-dto.ts";
+
+/**
  * 
  *
  * @export
@@ -30,7 +32,7 @@ export interface ReadingListRequestDTO {
      * @type {string}
      * @memberof ReadingListRequestDTO
      */
-    status?: ReadingListRequestDTOStatusEnum;
+    status?: ReadingListDTOStatusEnum;
 
     /**
      * @type {number}
@@ -43,11 +45,5 @@ export interface ReadingListRequestDTO {
  * @export
  * @enum {string}
  */
-export enum ReadingListRequestDTOStatusEnum {
-    PLANTOREAD = 'PLAN_TO_READ',
-    READING = 'READING',
-    COMPLETED = 'COMPLETED',
-    ONHOLD = 'ON_HOLD',
-    DROPPED = 'DROPPED'
-}
+
 

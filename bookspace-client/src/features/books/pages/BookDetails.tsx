@@ -6,17 +6,22 @@ import BookCard from "@/features/books/components/book-card.tsx";
 import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area.tsx";
 import RatingDistribution from "@/features/books/components/rating-distribution.tsx";
 import UserReviews from "@/features/books/components/user-reviews.tsx";
+import {ReadingStatusModal} from "@/features/books/components/reading-status-modal.tsx";
 import {useQuery} from "@tanstack/react-query";
-import {useParams} from "react-router";
+import {useParams, useNavigate} from "react-router";
 import {fetchBookDetails, fetchRatings, fetchSimilarBooks} from "@/services/book.service.ts";
 import {fetchReadingListItemByBookId} from "@/services/reading-list.service.ts";
 import {useAuth} from "@/features/auth/AuthContext.tsx";
 import {getBookGenreLabel} from "@/types/book-dto.ts";
 import {fetchBookReviews} from "@/services/review.service.ts";
+import {getReadingListStatusLabel} from "@/types/reading-list-dto.ts";
+import {useState} from "react";
 
 const BookDetails = () => {
     const {id} = useParams<{ id: string }>();
     const {user, isAuthenticated} = useAuth();
+    const navigate = useNavigate();
+    const [modalOpen, setModalOpen] = useState(false);
     const bookId = parseInt(id || "1");
 
     const book = useQuery({
@@ -51,6 +56,48 @@ const BookDetails = () => {
         enabled: isAuthenticated && !!bookId,
     });
 
+    const handleReadingListClick = () => {
+        if (!isAuthenticated) {
+            navigate("/login");
+            return;
+        }
+        setModalOpen(true);
+    };
+
+    const getButtonText = () => {
+        if (!isAuthenticated) {
+            return "Add to list";
+        }
+        
+        if (readingList.isLoading) {
+            return "Loading...";
+        }
+        
+        if (readingList.isSuccess && readingList.data) {
+            return getReadingListStatusLabel(readingList.data.status!);
+        }
+        
+        return "Add to list";
+    };
+
+    const getButtonVariant = () => {
+        if (!isAuthenticated) {
+            return "outline" as const;
+        }
+        
+        if (readingList.isSuccess && readingList.data) {
+            return "default" as const;
+        }
+        
+        return "outline" as const;
+    };
+
+    const getModalMode = () => {
+        if (readingList.isSuccess && readingList.data) {
+            return "update" as const;
+        }
+        return "create" as const;
+    };
 
     if (!book) {
         return <div className="p-4">Book not found</div>;
@@ -67,10 +114,19 @@ const BookDetails = () => {
                     <div className="rounded-lg overflow-hidden">
                         <img src={book.data.coverUrl} className={"h-auto w-full object-cover aspect-5/8"}/>
                     </div>
-                    <Button variant={"outline"} className={"rounded-full"}>
-                        {readingList.isSuccess && readingList.data ? "Remove from list" : "Add to list"}
+                    <Button 
+                        variant={getButtonVariant()} 
+                        className={"rounded-full"}
+                        onClick={handleReadingListClick}
+                        disabled={readingList.isLoading}
+                    >
+                        {getButtonText()}
                     </Button>
-                    <Rating className={"self-center"} defaultValue={3}>
+                    <Rating 
+                        className={"self-center"} 
+                        value={readingList.data?.rating || 0}
+                        readOnly
+                    >
                         {Array.from({length: 5}).map((_, index) => (
                             <RatingButton key={index}/>
                         ))}
@@ -133,6 +189,18 @@ const BookDetails = () => {
                     </div>
                 </div>
             </div>
+
+            {isAuthenticated && user && (
+                <ReadingStatusModal
+                    open={modalOpen}
+                    onOpenChange={setModalOpen}
+                    bookId={bookId}
+                    bookTitle={book.data.title || "Unknown Book"}
+                    username={user!}
+                    mode={getModalMode()}
+                    currentReadingItem={readingList.data || null}
+                />
+            )}
         </div>
 
     );
