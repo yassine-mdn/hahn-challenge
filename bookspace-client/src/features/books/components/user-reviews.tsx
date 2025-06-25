@@ -37,7 +37,7 @@ const UserReviews = (props: Props) => {
 
 
     return (
-        <Card className="w-full">
+        <Card className="w-full md:w-3xl">
             <CardContent className="p-4">
                 <div className="flex items-start space-x-3">
                     <Avatar className="w-12 h-12">
