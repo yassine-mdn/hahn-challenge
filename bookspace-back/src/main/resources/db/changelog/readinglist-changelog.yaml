@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 1750590274025-1
+      id: 6
       author: yassine
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -9,7 +9,7 @@ databaseChangeLog:
             sequenceName: reading_list_seq
             startValue: 1
   - changeSet:
-      id: 1750590274025-2
+      id: 7
       author: yassine
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       preConditions:
@@ -58,7 +58,7 @@ databaseChangeLog:
                   type: INT
             tableName: reading_list
   - changeSet:
-      id: 1750590274025-3
+      id: 8
       author: yassine
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       preConditions:
@@ -77,7 +77,7 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: book
   - changeSet:
-      id: 1750590274025-4
+      id: 9
       author: yassine
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       preConditions:

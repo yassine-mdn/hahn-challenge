@@ -1,0 +1,15 @@
+id,username,email,password,role,created_at,updated_at
+378b57f0-7c13-4f4e-a8c4-24a288e0fd32,admin,admin@email.com,$2a$10$lGXXu2JSq3RYeF/KHjcBJ.vjNvlAaTfwsMgwiE0BnEMSLNi1JxQCe,1,2025-06-25 12:13:29.203159,2025-06-25 12:13:29.203159
+5fdb96ef-61d7-4113-8d04-ade102b15b9e,user,user@gmail.com,$2a$10$Qlx3Nj4MXaCPgXrK2DaBa.da5ajDUmEdgj8ViIwQ8E/Pl/iJ0ZEB.,0,2025-06-25 12:54:03.088602,2025-06-25 12:54:03.088602
+a0e1a1a1-2b2b-3c3c-4d4d-5e5e5e5e5e5e,barakObama,barak.obama@example.com,$2a$10$Qlx3Nj4MXaCPgXrK2DaBa.da5ajDUmEdgj8ViIwQ8E/Pl/iJ0ZEB.,0,2025-06-25 13:04:30.123456,2025-06-25 13:04:30.123456
+b1f2b2b2-3c3c-4d4d-5e5e-6f6f6f6f6f6f,akhernouch,akhernouch@example.com,$2a$10$Qlx3Nj4MXaCPgXrK2DaBa.da5ajDUmEdgj8ViIwQ8E/Pl/iJ0ZEB.,0,2025-06-25 13:04:30.234567,2025-06-25 13:04:30.234567
+c2g3c3c3-4d4d-5e5e-6f6f-7a7a7a7a7a7a,LiamDavis,liam.davis@example.com,$2a$10$Qlx3Nj4MXaCPgXrK2DaBa.da5ajDUmEdgj8ViIwQ8E/Pl/iJ0ZEB.,0,2025-06-25 13:04:30.345678,2025-06-25 13:04:30.345678
+d3h4d4d4-5e5e-6f6f-7a7a-8b8b8b8b8b8b,EmmaMiller,emma.miller@example.com,$2a$10$Qlx3Nj4MXaCPgXrK2DaBa.da5ajDUmEdgj8ViIwQ8E/Pl/iJ0ZEB.,0,2025-06-25 13:04:30.456789,2025-06-25 13:04:30.456789
+e4i5e5e5-6f6f-7a7a-8b8b-9c9c9c9c9c9c,NoahWilson,noah.wilson@example.com,$2a$10$Qlx3Nj4MXaCPgXrK2DaBa.da5ajDUmEdgj8ViIwQ8E/Pl/iJ0ZEB.,0,2025-06-25 13:04:30.567890,2025-06-25 13:04:30.567890
+f5j6f6f6-7a7a-8b8b-9c9c-0d0d0d0d0d0d,OliviaTaylor,olivia.taylor@example.com,$2a$10$Qlx3Nj4MXaCPgXrK2DaBa.da5ajDUmEdgj8ViIwQ8E/Pl/iJ0ZEB.,0,2025-06-25 13:04:30.678901,2025-06-25 13:04:30.678901
+g6k7g7g7-8b8b-9c9c-0d0d-1e1e1e1e1e1e,WilliamBrown,william.brown@example.com,$2a$10$Qlx3Nj4MXaCPgXrK2DaBa.da5ajDUmEdgj8ViIwQ8E/Pl/iJ0ZEB.,0,2025-06-25 13:04:30.789012,2025-06-25 13:04:30.789012
+h7l8h8h8-9c9c-0d0d-1e1e-2f2f2f2f2f2f,AvaJohnson,ava.johnson@example.com,$2a$10$Qlx3Nj4MXaCPgXrK2DaBa.da5ajDUmEdgj8ViIwQ8E/Pl/iJ0ZEB.,0,2025-06-25 13:04:30.890123,2025-06-25 13:04:30.890123
+i8m9i9i9-0d0d-1e1e-2f2f-3g3g3g3g3g3g,JamesAnderson,james.anderson@example.com,$2a$10$Qlx3Nj4MXaCPgXrK2DaBa.da5ajDUmEdgj8ViIwQ8E/Pl/iJ0ZEB.,0,2025-06-25 13:04:30.901234,2025-06-25 13:04:30.901234
+j9na0a0a-1e1e-2f2f-3g3g-4h4h4h4h4h4h,IsabellaThomas,isabella.thomas@example.com,$2a$10$Qlx3Nj4MXaCPgXrK2DaBa.da5ajDUmEdgj8ViIwQ8E/Pl/iJ0ZEB.,0,2025-06-25 13:04:31.012345,2025-06-25 13:04:31.012345
+kana1a1a-2f2f-3g3g-4h4h-5i5i5i5i5i5i,BenjaminWhite,benjamin.white@example.com,$2a$10$Qlx3Nj4MXaCPgXrK2DaBa.da5ajDUmEdgj8ViIwQ8E/Pl/iJ0ZEB.,0,2025-06-25 13:04:31.123456,2025-06-25 13:04:31.123456
+lboa2a2a-3g3g-4h4h-5i5i-6j6j6j6j6j6j,MiaHarris,mia.harris@example.com,$2a$10$Qlx3Nj4MXaCPgXrK2DaBa.da5ajDUmEdgj8ViIwQ8E/Pl/iJ0ZEB.,0,2025-06-25 13:04:31.234567,2025-06-25 13:04:31.234567

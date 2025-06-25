@@ -11,4 +11,6 @@ databaseChangeLog:
       file: db/changelog/review-changelog.yaml
   - include:
       file: db/changelog/populate-changelog.yaml
+  - include:
+      file: db/changelog/resequence.yaml
 

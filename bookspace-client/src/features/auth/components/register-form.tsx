@@ -64,7 +64,7 @@ export function RegisterForm({
                                         type="text"
                                         placeholder="your email"
                                         autoComplete="email"
-                                        {...register("username", { required: "email is required" })}
+                                        {...register("email", { required: "email is required" })}
                                         aria-invalid={!!errors.email}
                                     />
                                     {errors.email && (
@@ -94,7 +94,7 @@ export function RegisterForm({
                                 </div>
                                 {error && <div className="text-xs text-red-500 text-center">{error}</div>}
                                 <Button type="submit" className="w-full" disabled={mutation.isPending}>
-                                    {mutation.isPending ? "Logging in..." : "Login"}
+                                    {mutation.isPending ? "Signing in..." : "Sign up"}
                                 </Button>
                             </div>
                             <div className="text-center text-sm">

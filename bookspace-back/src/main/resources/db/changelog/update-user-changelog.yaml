@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: update-password-length
+      id: 10
       author: yassine
       changes:
         - modifyDataType:
